@@ -178,7 +178,11 @@ export function deleteTable(token: string, id: string): Promise<{ ok: boolean }>
   return request(`/tables/${id}`, token, { method: "DELETE" });
 }
 
-export function updateTable(token: string, id: string, body: { status?: string; position?: { x: number; y: number } }): Promise<TableInfo> {
+export function updateTable(
+  token: string,
+  id: string,
+  body: { status?: string; position?: { x: number; y: number }; label?: string; capacity?: number }
+): Promise<TableInfo> {
   return request(`/tables/${id}`, token, { method: "PATCH", body: JSON.stringify(body) });
 }
 
