@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --bg: oklch(0.13 0.004 145);
+  --panel: oklch(0.19 0.006 145);
+  --panel-2: oklch(0.15 0.004 145);
+  --border: oklch(0.3 0.006 145);
+  --fg: oklch(0.97 0.003 90);
+  --muted: oklch(0.65 0.01 145);
+  --green: oklch(0.8 0.24 142);
+  --green-hover: oklch(0.87 0.24 142);
+  --red: oklch(0.58 0.22 25);
+  --green-soft: oklch(0.8 0.24 142 / 0.15);
+  --orange: oklch(0.75 0.19 65);
+  --orange-soft: oklch(0.75 0.19 65 / 0.15);
+  --red-soft: oklch(0.58 0.22 25 / 0.15);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-green: var(--green);
+  --color-green-hover: var(--green-hover);
+  --color-red: var(--red);
+  --color-green-soft: var(--green-soft);
+  --color-orange: var(--orange);
+  --color-orange-soft: var(--orange-soft);
+  --color-red-soft: var(--red-soft);
+  --font-display: var(--font-bebas-neue);
+  --font-sans: var(--font-inter);
+}
+
+@keyframes qrPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.8 0.24 142 / 0.35);
+  }
+  50% {
+    box-shadow: 0 0 44px 10px oklch(0.8 0.24 142 / 0.3);
+  }
+}
+
+.animate-qr-pulse {
+  animation: qrPulse 2.4s ease-in-out infinite;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
