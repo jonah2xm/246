@@ -5,39 +5,23 @@ import RoleGate from "@/components/RoleGate";
 import TopBar from "@/components/TopBar";
 import Modal, { Field, inputCls, btnPrimary, btnGhost } from "@/components/Modal";
 import { useAuth } from "@/lib/auth-context";
-import {
-  getTables,
-  createTable,
-  updateTable,
-  deleteTable,
-  mergeTables,
-  splitSession,
-  assignStaffToSession,
-  closeSession,
-  listStaff,
-} from "@/lib/api";
+import { getTables, createTable, updateTable, deleteTable, mergeTables, splitSession, closeSession } from "@/lib/api";
 import { getSocket } from "@/lib/socket";
-import { TableInfo, TableStatus, StaffMember } from "@/lib/types";
+import { TableInfo, TableStatus } from "@/lib/types";
 
 const STATUS_LABEL: Record<TableStatus, string> = {
   free: "Libre",
   occupied: "Occupée",
-  awaiting_payment: "Attente paiement",
-  needs_cleaning: "Nettoyage",
 };
 
 const STATUS_COLOR: Record<TableStatus, string> = {
   free: "border-border bg-panel",
   occupied: "border-green bg-green-soft",
-  awaiting_payment: "border-orange bg-orange-soft",
-  needs_cleaning: "border-red bg-red-soft",
 };
 
 const STATUS_DOT: Record<TableStatus, string> = {
   free: "bg-muted",
   occupied: "bg-green",
-  awaiting_payment: "bg-orange",
-  needs_cleaning: "bg-red",
 };
 
 function durationSince(iso: string): string {
@@ -49,7 +33,6 @@ function durationSince(iso: string): string {
 function FloorPlan() {
   const { token, staff: me } = useAuth();
   const [tables, setTables] = useState<TableInfo[]>([]);
-  const [staff, setStaff] = useState<StaffMember[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<TableInfo | "new" | null>(null);
@@ -59,9 +42,7 @@ function FloorPlan() {
   async function refresh() {
     if (!token) return;
     try {
-      const [t, s] = await Promise.all([getTables(token), listStaff(token)]);
-      setTables(t);
-      setStaff(s);
+      setTables(await getTables(token));
     } catch {
       setError("Impossible de charger les tables.");
     }
@@ -90,12 +71,6 @@ function FloorPlan() {
     });
   }
 
-  async function handleStatus(table: TableInfo, status: TableStatus) {
-    if (!token) return;
-    await updateTable(token, table.id, { status });
-    refresh();
-  }
-
   async function handleMerge() {
     if (!token || selected.size < 2) return;
     try {
@@ -120,7 +95,7 @@ function FloorPlan() {
   }
 
   const stats = useMemo(() => {
-    const byStatus = { free: 0, occupied: 0, awaiting_payment: 0, needs_cleaning: 0 } as Record<TableStatus, number>;
+    const byStatus = { free: 0, occupied: 0 } as Record<TableStatus, number>;
     tables.forEach((t) => byStatus[t.status]++);
     return byStatus;
   }, [tables]);
@@ -142,7 +117,7 @@ function FloorPlan() {
           <button
             onClick={handleMerge}
             disabled={selected.size < 2}
-            className="rounded-full bg-green px-4 py-1.5 text-xs font-semibold text-[#08130a] transition-colors hover:bg-green-hover disabled:opacity-40"
+            className="rounded-full bg-green px-5 py-3 text-sm font-semibold text-[#08130a] transition-colors motion-safe:active:scale-95 hover:bg-green-hover disabled:opacity-40"
           >
             Fusionner ({selected.size})
           </button>
@@ -160,93 +135,69 @@ function FloorPlan() {
         {tables.map((t) => {
           const merged = (t.session?.tableIds.length ?? 0) > 1;
           return (
-            <div key={t.id} className={`flex flex-col gap-2.5 rounded-2xl border-2 p-4 transition-colors ${STATUS_COLOR[t.status]}`}>
+            <div key={t.id} className={`flex flex-col gap-3 rounded-2xl border-2 p-4 transition-colors ${STATUS_COLOR[t.status]}`}>
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="font-display text-2xl">{t.label}</div>
-                  <span className="text-[11px] text-muted">{t.capacity} places</span>
+                  <div className="font-display text-3xl leading-none">{t.label}</div>
+                  <span className="text-xs text-muted">{t.capacity} places</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   {isManager && (
                     <>
                       <button
                         onClick={() => setEditing(t)}
-                        className="text-xs text-muted transition-colors hover:text-fg"
-                        title="Modifier"
+                        aria-label="Modifier la table"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg text-sm text-muted transition-colors motion-safe:active:scale-90 hover:bg-panel-2 hover:text-fg"
                       >
                         ✎
                       </button>
                       <button
                         onClick={() => handleDelete(t)}
-                        className="text-xs text-muted transition-colors hover:text-red"
-                        title="Supprimer"
+                        aria-label="Supprimer la table"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg text-sm text-muted transition-colors motion-safe:active:scale-90 hover:bg-red-soft hover:text-red"
                       >
                         🗑
                       </button>
                     </>
                   )}
-                  <input
-                    type="checkbox"
-                    checked={selected.has(t.id)}
-                    onChange={() => toggleSelect(t.id)}
-                    className="h-4 w-4"
-                    title="Sélectionner pour fusion"
-                  />
+                  <label className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-panel-2" title="Sélectionner pour fusion">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(t.id)}
+                      onChange={() => toggleSelect(t.id)}
+                      className="h-5 w-5 accent-green"
+                    />
+                  </label>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-muted">
-                <span className={`h-2 w-2 rounded-full ${STATUS_DOT[t.status]}`} />
+              <div className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted">
+                <span className={`h-2.5 w-2.5 rounded-full ${STATUS_DOT[t.status]}`} />
                 {STATUS_LABEL[t.status]}
               </div>
 
               {t.session && (
-                <div className="flex flex-col gap-1.5 border-t border-border pt-2 text-xs text-muted">
+                <div className="flex flex-col gap-2 border-t border-border pt-3 text-xs text-muted">
                   <div>Ouverte depuis {durationSince(t.session.openedAt)}</div>
                   {merged && <div className="text-green">Fusionnée ({t.session.tableIds.length} tables)</div>}
-                  <select
-                    value={t.session.assignedStaff?.id || ""}
-                    onChange={(e) => t.session && e.target.value && assignStaffToSession(token!, t.session.id, e.target.value).then(refresh)}
-                    className="rounded-lg border border-border bg-panel-2 px-2 py-1.5 text-xs text-fg"
-                  >
-                    <option value="">Serveur non assigné</option>
-                    {staff.map((s) => (
-                      <option key={s._id} value={s._id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-2">
                     {merged && (
                       <button
                         onClick={() => t.session && splitSession(token!, t.session.id).then(refresh)}
-                        className="flex-1 rounded-lg border border-border py-1.5 text-[11px] text-muted transition-colors hover:border-green hover:text-fg"
+                        className="h-11 flex-1 rounded-xl border border-border text-sm text-muted transition-colors motion-safe:active:scale-95 hover:border-green hover:text-fg"
                       >
                         Séparer
                       </button>
                     )}
                     <button
                       onClick={() => t.session && closeSession(token!, t.session.id).then(refresh)}
-                      className="flex-1 rounded-lg border border-border py-1.5 text-[11px] text-muted transition-colors hover:border-green hover:text-fg"
+                      className="h-11 flex-1 rounded-xl border border-border text-sm text-muted transition-colors motion-safe:active:scale-95 hover:border-green hover:text-fg"
                     >
                       Clôturer
                     </button>
                   </div>
                 </div>
               )}
-
-              <div className="mt-auto grid grid-cols-2 gap-1 border-t border-border pt-2">
-                {(Object.keys(STATUS_LABEL) as TableStatus[]).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => handleStatus(t, s)}
-                    disabled={t.status === s}
-                    className="rounded-md px-1.5 py-1 text-[10px] text-muted transition-colors hover:bg-panel-2 hover:text-fg disabled:text-green disabled:opacity-100"
-                  >
-                    {STATUS_LABEL[s]}
-                  </button>
-                ))}
-              </div>
             </div>
           );
         })}

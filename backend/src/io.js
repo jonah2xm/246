@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
+const { isOriginAllowed } = require("./config/corsOrigins");
 
 let io = null;
 
@@ -9,7 +10,13 @@ let io = null;
 // menu:updated is broadcast to everyone (customer menus refetch).
 function initIO(httpServer) {
   io = new Server(httpServer, {
-    cors: { origin: true, methods: ["GET", "POST", "PATCH"] },
+    cors: {
+      origin(origin, callback) {
+        if (isOriginAllowed(origin)) callback(null, true);
+        else callback(new Error("Not allowed by CORS"));
+      },
+      methods: ["GET", "POST", "PATCH"],
+    },
   });
 
   io.on("connection", (socket) => {

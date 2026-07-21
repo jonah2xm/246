@@ -19,7 +19,7 @@ function money(n) {
 
 function buildReceiptText(order) {
   const lines = [];
-  lines.push(INIT, ALIGN_CENTER, DOUBLE_SIZE, BOLD_ON, "64.PIZZA\n", NORMAL_SIZE, BOLD_OFF);
+  lines.push(INIT, ALIGN_CENTER, DOUBLE_SIZE, BOLD_ON, "246\n", NORMAL_SIZE, BOLD_OFF);
   lines.push(`Ticket #${order.orderNumber}\n`);
   lines.push(`${new Date(order.createdAt).toLocaleString("fr-FR")}\n`);
   lines.push(ALIGN_LEFT, LINE);

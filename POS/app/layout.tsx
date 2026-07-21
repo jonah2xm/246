@@ -16,13 +16,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "64.PIZZA — POS",
+  title: "246 — POS",
   description: "Interface staff — cuisine, caisse, administration.",
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: "#0d0f0e",
 };
 

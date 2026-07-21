@@ -33,7 +33,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 px-6">
       <div className="font-display text-[40px] tracking-wide">
-        64<span className="text-green">.</span>PIZZA <span className="text-muted text-lg">POS</span>
+        24<span className="text-green">6</span> <span className="text-muted text-lg">POS</span>
       </div>
 
       <form onSubmit={handleSubmit} className="flex w-full max-w-[320px] flex-col gap-3.5">

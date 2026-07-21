@@ -1,5 +1,7 @@
 const Order = require("../models/Order");
 const Staff = require("../models/Staff");
+const Table = require("../models/Table");
+const TableSession = require("../models/TableSession");
 const { todayKey } = require("../utils/queueNumber");
 
 // Single-location, single-day order volumes are small enough to aggregate
@@ -85,6 +87,64 @@ async function summary(req, res, next) {
   }
 }
 
+// Per-table order history and sales — same aggregation shape as summary(),
+// but grouped by table label ("T2+T3" when merged) instead of totals.
+async function tableStats(req, res, next) {
+  try {
+    const businessDate = req.query.date || todayKey();
+    const orders = await Order.find({ businessDate }).sort({ createdAt: -1 });
+
+    const sessionIds = [...new Set(orders.map((o) => o.sessionId && String(o.sessionId)).filter(Boolean))];
+    const sessions = sessionIds.length ? await TableSession.find({ _id: { $in: sessionIds } }) : [];
+    const tableIds = [...new Set(sessions.flatMap((s) => s.tableIds.map(String)))];
+    const tablesById = await Table.find({ _id: { $in: tableIds } });
+    const labelById = new Map(tablesById.map((t) => [String(t._id), t.label]));
+    const labelBySession = new Map(
+      sessions.map((s) => [String(s._id), s.tableIds.map((tid) => labelById.get(String(tid)) || "?").join("+")])
+    );
+
+    const groups = new Map();
+    for (const o of orders) {
+      const key = o.sessionId ? labelBySession.get(String(o.sessionId)) || "?" : "__counter__";
+      const list = groups.get(key);
+      if (list) list.push(o);
+      else groups.set(key, [o]);
+    }
+
+    const allTables = await Table.find().sort({ label: 1 });
+    const knownLabels = allTables.map((t) => t.label);
+    const otherLabels = [...groups.keys()].filter((k) => k !== "__counter__" && !knownLabels.includes(k));
+    const orderedKeys = [...knownLabels, ...otherLabels.sort(), "__counter__"];
+
+    const tables = orderedKeys.map((key) => {
+      const list = groups.get(key) || [];
+      const active = list.filter((o) => o.status !== "cancelled");
+      const revenue = active.reduce((s, o) => s + o.total, 0);
+      return {
+        table: key === "__counter__" ? null : key,
+        label: key === "__counter__" ? "Comptoir" : key,
+        orderCount: active.length,
+        revenue,
+        averageOrderValue: active.length ? Math.round(revenue / active.length) : 0,
+        orders: list.map((o) => ({
+          id: o._id,
+          orderNumber: o.orderNumber,
+          total: o.total,
+          status: o.status,
+          paymentStatus: o.payment.status,
+          paymentMethod: o.payment.method,
+          itemCount: o.items.reduce((s, it) => s + it.qty, 0),
+          createdAt: o.createdAt,
+        })),
+      };
+    });
+
+    res.json({ businessDate, tables });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function customerHistory(req, res, next) {
   try {
     const orders = await Order.find({ customerPhone: req.params.phone }).sort({ createdAt: -1 });
@@ -103,4 +163,4 @@ async function customerHistory(req, res, next) {
   }
 }
 
-module.exports = { summary, customerHistory };
+module.exports = { summary, tableStats, customerHistory };

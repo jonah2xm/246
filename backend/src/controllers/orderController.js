@@ -244,6 +244,18 @@ async function listToday(req, res, next) {
   }
 }
 
+// Cashier view: every still-unpaid order regardless of businessDate, so a
+// commande that carried over from a previous day never falls out of sight.
+async function listUnpaid(req, res, next) {
+  try {
+    const orders = await Order.find({ "payment.status": "pending" }).sort({ createdAt: -1 });
+    const labels = await tableLabelsBySession(orders);
+    res.json(orders.map((o) => staffOrder(o, o.sessionId ? labels.get(String(o.sessionId)) || null : null)));
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function updateStatus(req, res, next) {
   try {
     const { status } = req.body;
@@ -375,6 +387,7 @@ module.exports = {
   createOrder,
   listActive,
   listToday,
+  listUnpaid,
   updateStatus,
   updateItems,
   markPaid,

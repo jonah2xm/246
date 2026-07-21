@@ -64,14 +64,8 @@ async function createTable(req, res, next) {
 
 async function updateTable(req, res, next) {
   try {
-    const { status, position, label, capacity } = req.body;
+    const { position, label, capacity } = req.body;
     const update = {};
-    if (status) {
-      if (!["free", "occupied", "awaiting_payment", "needs_cleaning"].includes(status)) {
-        return res.status(400).json({ error: "Invalid status" });
-      }
-      update.status = status;
-    }
     if (position) update.position = position;
     if (label !== undefined) {
       if (!String(label).trim()) return res.status(400).json({ error: "label invalide" });
@@ -201,7 +195,7 @@ async function closeSession(req, res, next) {
     session.status = "closed";
     session.closedAt = new Date();
     await session.save();
-    await Table.updateMany({ _id: { $in: session.tableIds } }, { status: "needs_cleaning" });
+    await Table.updateMany({ _id: { $in: session.tableIds } }, { status: "free" });
 
     getIO().to("staff").emit("table:closed", { sessionId: session._id, tableIds: session.tableIds });
     res.json(session);

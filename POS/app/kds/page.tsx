@@ -97,7 +97,7 @@ function KdsBoard() {
           <button
             key={s}
             onClick={() => setStation(s)}
-            className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition-colors ${
+            className={`rounded-full px-5 py-3 text-sm font-medium capitalize transition-colors motion-safe:active:scale-95 ${
               station === s ? "bg-green text-[#08130a]" : "bg-panel text-muted hover:text-fg"
             }`}
           >

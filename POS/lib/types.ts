@@ -129,7 +129,7 @@ export interface TableSessionInfo {
   assignedStaff: { id: string; name: string } | null;
 }
 
-export type TableStatus = "free" | "occupied" | "awaiting_payment" | "needs_cleaning";
+export type TableStatus = "free" | "occupied";
 
 export interface TableInfo {
   id: string;
@@ -145,13 +145,6 @@ export interface StaffMember {
   _id: string;
   name: string;
   role: Role;
-}
-
-export interface Shift {
-  _id: string;
-  staffId: string;
-  clockIn: string;
-  clockOut: string | null;
 }
 
 export interface AnalyticsSummary {
@@ -171,6 +164,31 @@ export interface AnalyticsSummary {
     paymentsHandled: number;
     revenueCollected: number;
   }[];
+}
+
+export interface TableOrderHistoryEntry {
+  id: string;
+  orderNumber: number;
+  total: number;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod: PaymentMethod;
+  itemCount: number;
+  createdAt: string;
+}
+
+export interface TableAnalyticsEntry {
+  table: string | null;
+  label: string;
+  orderCount: number;
+  revenue: number;
+  averageOrderValue: number;
+  orders: TableOrderHistoryEntry[];
+}
+
+export interface TableAnalytics {
+  businessDate: string;
+  tables: TableAnalyticsEntry[];
 }
 
 export interface FeedbackEntry {

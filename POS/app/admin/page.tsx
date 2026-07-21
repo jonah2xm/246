@@ -23,6 +23,8 @@ import {
   uploadImage,
 } from "@/lib/api";
 import { getSocket } from "@/lib/socket";
+import PhotoTile from "@/components/PhotoTile";
+import { hueForName } from "@/lib/placeholder";
 import { CategoryAdmin, CategoryInfo, Ingredient, MenuItemAdmin, RecipeEntry } from "@/lib/types";
 
 type Tab = "items" | "categories" | "ingredients";
@@ -73,13 +75,13 @@ function MenuAdmin() {
   return (
     <div className="min-h-screen">
       <TopBar />
-      <div className="flex items-center gap-2 px-5 pt-4">
+      <div className="flex items-center gap-1.5 rounded-2xl bg-panel-2 p-1.5 mx-5 mt-4 w-fit">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`rounded-full px-5 py-2 font-display text-[15px] tracking-wide transition-colors ${
-              tab === t.key ? "bg-green text-[#08130a]" : "bg-panel text-muted hover:text-fg"
+            className={`min-h-12 rounded-xl px-7 py-3 font-display text-lg tracking-wide transition-colors motion-safe:active:scale-95 ${
+              tab === t.key ? "bg-green text-[#08130a]" : "text-muted hover:bg-panel hover:text-fg"
             }`}
           >
             {t.label}
@@ -122,8 +124,11 @@ function ItemsTab({
   const { token } = useAuth();
   const [editing, setEditing] = useState<MenuItemAdmin | "new" | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [filterCat, setFilterCat] = useState<string>("all");
 
   const ingredientName = (id: string) => ingredients.find((i) => i._id === id)?.name || "?";
+  const visibleCategories = filterCat === "all" ? categories : categories.filter((c) => c.key === filterCat);
+  const totalCount = categories.reduce((s, c) => s + c.items.length, 0);
 
   async function toggle(item: MenuItemAdmin) {
     if (!token) return;
@@ -150,76 +155,124 @@ function ItemsTab({
   }
 
   return (
-    <div className="flex flex-col gap-6 p-5">
-      <div className="flex justify-end">
+    <div className="flex flex-col gap-8 p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-[11px] font-medium uppercase tracking-wide text-muted">Filtrer&nbsp;:</span>
+          <button
+            onClick={() => setFilterCat("all")}
+            className={`min-h-10 rounded-full border px-4 py-2 text-xs font-medium transition-colors motion-safe:active:scale-95 ${
+              filterCat === "all" ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
+            }`}
+          >
+            Toutes ({totalCount})
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat.key}
+              onClick={() => setFilterCat(cat.key)}
+              className={`min-h-10 rounded-full border px-4 py-2 text-xs font-medium transition-colors motion-safe:active:scale-95 ${
+                filterCat === cat.key ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
+              }`}
+            >
+              {cat.label} ({cat.items.length})
+            </button>
+          ))}
+        </div>
         <button onClick={() => setEditing("new")} className={btnPrimary}>
           + Nouvel article
         </button>
       </div>
 
-      {categories.map((cat) => (
+      {visibleCategories.map((cat) => (
         <div key={cat.key}>
-          <div className="mb-2.5 flex items-baseline gap-2.5">
-            <div className="font-display text-xl text-green">{cat.label}</div>
+          <div className="mb-3.5 flex items-baseline gap-2.5">
+            <div className="font-display text-2xl text-green">{cat.label}</div>
             <div className="text-xs text-muted">{cat.items.length} article(s)</div>
           </div>
 
           {cat.items.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-border px-4 py-5 text-center text-sm text-muted">
+            <div className="rounded-2xl border border-dashed border-border px-4 py-8 text-center text-sm text-muted">
               Aucun article dans cette catégorie.
             </div>
           ) : (
-            <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {cat.items.map((item) => (
                 <div
                   key={item.id}
-                  className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 transition-colors ${
-                    !item.inStock ? "border-orange bg-orange-soft" : "border-border bg-panel"
-                  }`}
+                  className={`flex flex-col overflow-hidden rounded-2xl border transition-colors ${
+                    !item.inStock ? "border-orange" : "border-border"
+                  } bg-panel`}
                 >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 text-sm font-medium">
-                      {item.name}
-                      {item.comboConfig && (
-                        <span className="rounded-full bg-green-soft px-2 py-0.5 text-[10px] font-semibold text-green">
-                          COMBO {item.comboConfig.picks}
-                        </span>
-                      )}
-                      {!item.inStock && (
-                        <span className="rounded-full bg-red-soft px-2 py-0.5 text-[10px] font-semibold text-red">
-                          RUPTURE STOCK
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-0.5 text-[11px] text-muted">
-                      {item.sizes.map((s) => `${s.label}: ${s.price} DA`).join(" · ")} · {item.station}
-                      {item.recipe.length > 0 && (
-                        <> · recette: {item.recipe.map((r) => `${r.qty}× ${ingredientName(r.ingredientId)}`).join(", ")}</>
-                      )}
-                    </div>
+                  <div className="relative aspect-square w-full overflow-hidden bg-panel-2">
+                    <PhotoTile src={item.photo} name={item.name} />
+                    {item.comboConfig && (
+                      <span className="absolute left-2 top-2 rounded-full bg-green px-2.5 py-1 text-[10px] font-bold text-[#08130a]">
+                        COMBO {item.comboConfig.picks}
+                      </span>
+                    )}
+                    {item.highlight && (
+                      <span className="absolute right-2 top-2 rounded-full bg-panel/90 px-2.5 py-1 text-[10px] font-bold text-green">
+                        ★
+                      </span>
+                    )}
+                    {!item.inStock && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/65">
+                        <span className="rounded-full bg-red px-3 py-1.5 text-xs font-bold text-white">RUPTURE STOCK</span>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex items-center gap-2.5">
-                    <button onClick={() => setEditing(item)} className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-green hover:text-fg">
-                      Modifier
-                    </button>
-                    <button onClick={() => handleDelete(item)} className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-red hover:text-red">
-                      Supprimer
-                    </button>
-                    <button
-                      onClick={() => toggle(item)}
-                      disabled={busyId === item.id}
-                      title={item.manualAvailable ? "Cliquez pour marquer épuisé" : "Cliquez pour rendre disponible"}
-                      className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors disabled:opacity-60 ${
-                        item.manualAvailable ? "border-green bg-green" : "border-border bg-panel-2"
-                      }`}
-                    >
-                      <span
-                        className={`absolute top-[3px] h-5 w-5 rounded-full shadow transition-transform ${
-                          item.manualAvailable ? "translate-x-[22px] bg-[#08130a]" : "translate-x-[3px] bg-muted"
+                  <div className="flex flex-1 flex-col gap-2.5 p-3.5">
+                    <div>
+                      <div className="font-display text-lg leading-tight">{item.name}</div>
+                      <div className="mt-1 text-sm font-semibold text-green">
+                        {item.sizes.map((s) => `${s.price} DA`).join(" / ")}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-full border border-border px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted">
+                        {item.station}
+                      </span>
+                      {item.recipe.length > 0 && (
+                        <span
+                          className="truncate rounded-full border border-border px-2 py-0.5 text-[10px] text-muted"
+                          title={item.recipe.map((r) => `${r.qty}× ${ingredientName(r.ingredientId)}`).join(", ")}
+                        >
+                          {item.recipe.length} ingrédient(s)
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-auto flex flex-col gap-2 pt-1">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setEditing(item)}
+                          className="flex h-11 flex-1 items-center justify-center rounded-xl border border-border text-sm font-medium text-muted transition-colors motion-safe:active:scale-95 hover:border-green hover:text-fg"
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item)}
+                          aria-label="Supprimer"
+                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border text-base text-muted transition-colors motion-safe:active:scale-95 hover:border-red hover:text-red"
+                        >
+                          🗑
+                        </button>
+                      </div>
+                      <button
+                        onClick={() => toggle(item)}
+                        disabled={busyId === item.id}
+                        className={`h-11 rounded-xl text-sm font-semibold transition-colors motion-safe:active:scale-[0.97] disabled:opacity-60 ${
+                          item.manualAvailable
+                            ? "bg-green text-[#08130a]"
+                            : "border border-border bg-panel-2 text-muted"
                         }`}
-                      />
-                    </button>
+                      >
+                        {item.manualAvailable ? "Disponible" : "Épuisé — réactiver"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -312,78 +365,92 @@ function ItemFormModal({
   }
 
   return (
-    <Modal title={item ? `Modifier — ${item.name}` : "Nouvel article"} onClose={onClose} wide>
-      <div className="grid grid-cols-2 gap-4">
-        <Field label="Nom">
-          <input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} placeholder="BIG CLASSIC" />
-        </Field>
-        <Field label="Catégorie">
-          <select value={categoryKey} onChange={(e) => setCategoryKey(e.target.value)} className={inputCls}>
-            {categoryList.map((c) => (
-              <option key={c.key} value={c.key}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-        </Field>
-      </div>
-
-      <Field label="Description">
-        <input value={desc} onChange={(e) => setDesc(e.target.value)} className={inputCls} placeholder="Steak, fromage…" />
-      </Field>
-
-      <Field label="Station cuisine">
-        <select value={station} onChange={(e) => setStation(e.target.value)} className={inputCls}>
-          <option value="grill">Grill</option>
-          <option value="pizza">Pizza</option>
-        </select>
-      </Field>
-
-      <div>
-        <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">
-          Photo — visible sur le menu QR
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex h-20 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border bg-panel">
+    <Modal title={item ? `Modifier — ${item.name}` : "Nouvel article"} onClose={onClose} size="xwide">
+      <div className="flex flex-col gap-5 sm:flex-row">
+        <div className="flex shrink-0 flex-col gap-2.5">
+          <div className="relative h-36 w-36 overflow-hidden rounded-2xl border border-border bg-panel-2">
             {photo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={photo} alt="Aperçu" className="h-full w-full object-cover" />
             ) : (
-              <span className="text-[10px] text-muted">Aucune photo</span>
+              <PhotoTile src={undefined} name={name || "?"} />
             )}
           </div>
-          <div className="flex flex-col gap-2">
-            <label className={`${btnGhost} cursor-pointer text-center ${uploading ? "opacity-60" : ""}`}>
-              {uploading ? "Envoi…" : photo ? "Changer la photo" : "Importer une photo"}
-              <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                className="hidden"
-                disabled={uploading}
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  e.target.value = "";
-                  if (!file || !token) return;
-                  setUploading(true);
-                  try {
-                    const { url } = await uploadImage(token, file);
-                    setPhoto(url);
-                    onError(null);
-                  } catch (err) {
-                    onError(err instanceof Error ? err.message : "Échec de l'upload.");
-                  } finally {
-                    setUploading(false);
-                  }
-                }}
-              />
-            </label>
-            {photo && (
-              <button onClick={() => setPhoto("")} className="text-left text-xs text-muted transition-colors hover:text-red">
-                Retirer la photo
-              </button>
-            )}
-            <span className="text-[10px] text-muted">JPEG, PNG ou WebP · 5 Mo max</span>
-          </div>
+          <label className={`${btnGhost} block cursor-pointer text-center ${uploading ? "opacity-60" : ""}`}>
+            {uploading ? "Envoi…" : photo ? "Changer" : "Importer"}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              disabled={uploading}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                e.target.value = "";
+                if (!file || !token) return;
+                setUploading(true);
+                try {
+                  const { url } = await uploadImage(token, file);
+                  setPhoto(url);
+                  onError(null);
+                } catch (err) {
+                  onError(err instanceof Error ? err.message : "Échec de l'upload.");
+                } finally {
+                  setUploading(false);
+                }
+              }}
+            />
+          </label>
+          {photo && (
+            <button onClick={() => setPhoto("")} className="text-xs text-muted transition-colors hover:text-red">
+              Retirer la photo
+            </button>
+          )}
+          <span className="text-[10px] leading-tight text-muted">JPEG, PNG ou WebP · 5 Mo max</span>
+        </div>
+
+        <div className="flex flex-1 flex-col gap-4">
+          <Field label="Nom">
+            <input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} placeholder="BIG CLASSIC" />
+          </Field>
+          <Field label="Description">
+            <input value={desc} onChange={(e) => setDesc(e.target.value)} className={inputCls} placeholder="Steak, fromage…" />
+          </Field>
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Catégorie</div>
+        <div className="flex flex-wrap gap-2">
+          {categoryList.map((c) => (
+            <button
+              key={c.key}
+              type="button"
+              onClick={() => setCategoryKey(c.key)}
+              className={`rounded-xl border px-4 py-3 text-sm font-medium transition-colors motion-safe:active:scale-95 ${
+                categoryKey === c.key ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Station cuisine</div>
+        <div className="flex gap-2">
+          {(["grill", "pizza"] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setStation(s)}
+              className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium capitalize transition-colors motion-safe:active:scale-95 ${
+                station === s ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -561,9 +628,11 @@ function CategoriesTab({
     onChanged();
   }
 
+  const sorted = [...categoryList].sort((a, b) => a.order - b.order);
+
   return (
-    <div className="mx-auto flex w-full max-w-[620px] flex-col gap-4 p-5">
-      <div className="flex gap-2.5">
+    <div className="flex flex-col gap-6 p-5">
+      <div className="mx-auto flex w-full max-w-[680px] gap-2.5">
         <input
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
@@ -576,42 +645,66 @@ function CategoriesTab({
         </button>
       </div>
 
-      <div className="flex flex-col gap-2">
-        {[...categoryList]
-          .sort((a, b) => a.order - b.order)
-          .map((cat, idx, arr) => (
-            <div key={cat.id} className="flex items-center justify-between gap-3 rounded-xl border border-border bg-panel px-4 py-3">
-              <div className="flex items-center gap-3">
-                <div className="flex flex-col">
-                  <button onClick={() => move(cat, -1)} disabled={idx === 0} className="text-xs text-muted hover:text-fg disabled:opacity-20">▲</button>
-                  <button onClick={() => move(cat, 1)} disabled={idx === arr.length - 1} className="text-xs text-muted hover:text-fg disabled:opacity-20">▼</button>
-                </div>
-                <div>
-                  <div className="font-display text-lg">{cat.label}</div>
-                  <div className="text-[11px] text-muted">{cat.itemCount} article(s) · clé: {cat.key}</div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {sorted.map((cat, idx) => {
+          const hue = hueForName(cat.label);
+          return (
+            <div key={cat.id} className="flex flex-col overflow-hidden rounded-2xl border border-border bg-panel">
+              <div
+                className="relative flex aspect-square w-full items-center justify-center"
+                style={{ background: `linear-gradient(135deg, oklch(0.32 0.05 ${hue}), oklch(0.2 0.03 ${hue}))` }}
+              >
+                <span className="px-2 text-center font-display text-2xl leading-tight tracking-wide text-fg/80">
+                  {cat.label}
+                </span>
+                <div className="absolute right-2 top-2 flex flex-col overflow-hidden rounded-lg bg-black/30 backdrop-blur-sm">
+                  <button
+                    onClick={() => move(cat, -1)}
+                    disabled={idx === 0}
+                    aria-label="Monter"
+                    className="flex h-9 w-9 items-center justify-center text-sm text-fg/80 transition-colors motion-safe:active:scale-90 hover:bg-black/20 disabled:opacity-20"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    onClick={() => move(cat, 1)}
+                    disabled={idx === sorted.length - 1}
+                    aria-label="Descendre"
+                    className="flex h-9 w-9 items-center justify-center text-sm text-fg/80 transition-colors motion-safe:active:scale-90 hover:bg-black/20 disabled:opacity-20"
+                  >
+                    ▼
+                  </button>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    setEditing(cat);
-                    setEditLabel(cat.label);
-                  }}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-green hover:text-fg"
-                >
-                  Renommer
-                </button>
-                <button
-                  onClick={() => handleDelete(cat)}
-                  disabled={cat.itemCount > 0}
-                  title={cat.itemCount > 0 ? "Déplacez d'abord les articles de cette catégorie" : undefined}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-red hover:text-red disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  Supprimer
-                </button>
+
+              <div className="flex flex-1 flex-col gap-2.5 p-3.5">
+                <div className="text-xs text-muted">
+                  {cat.itemCount} article(s) · clé&nbsp;: {cat.key}
+                </div>
+                <div className="mt-auto flex gap-2">
+                  <button
+                    onClick={() => {
+                      setEditing(cat);
+                      setEditLabel(cat.label);
+                    }}
+                    className="flex h-11 flex-1 items-center justify-center rounded-xl border border-border text-sm text-muted transition-colors motion-safe:active:scale-95 hover:border-green hover:text-fg"
+                  >
+                    Renommer
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cat)}
+                    disabled={cat.itemCount > 0}
+                    title={cat.itemCount > 0 ? "Déplacez d'abord les articles de cette catégorie" : undefined}
+                    aria-label="Supprimer"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border text-base text-muted transition-colors motion-safe:active:scale-95 hover:border-red hover:text-red disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    🗑
+                  </button>
+                </div>
               </div>
             </div>
-          ))}
+          );
+        })}
       </div>
 
       {editing && (
@@ -681,75 +774,78 @@ function IngredientsTab({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-[680px] flex-col gap-4 p-5">
+    <div className="flex flex-col gap-4 p-5">
       <div className="flex justify-end">
         <button onClick={() => setCreating(true)} className={btnPrimary}>
           + Nouvel ingrédient
         </button>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {ingredients.map((ing) => {
           const low = ing.qty <= ing.lowThreshold;
           return (
             <div
               key={ing._id}
-              className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 ${
+              className={`flex flex-col gap-3 rounded-2xl border p-4 transition-colors ${
                 low ? "border-orange bg-orange-soft" : "border-border bg-panel"
               }`}
             >
               <div>
-                <div className="flex items-center gap-2 text-sm font-medium">
-                  {ing.name}
-                  {low && (
-                    <span className="rounded-full bg-orange-soft px-2 py-0.5 text-[10px] font-semibold text-orange">
-                      STOCK BAS
-                    </span>
-                  )}
-                </div>
-                <div className="text-[11px] text-muted">
-                  Seuil d&apos;alerte: {ing.lowThreshold} {ing.unit}
-                </div>
+                <div className="font-display text-lg leading-tight">{ing.name}</div>
+                {low ? (
+                  <span className="mt-1 inline-block rounded-full bg-orange-soft px-2 py-0.5 text-[10px] font-semibold text-orange">
+                    STOCK BAS
+                  </span>
+                ) : (
+                  <div className="mt-1 text-[11px] text-muted">Seuil&nbsp;: {ing.lowThreshold} {ing.unit}</div>
+                )}
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => adjust(ing, -1)}
-                    disabled={busyId === ing._id || ing.qty === 0}
-                    className="h-8 w-8 rounded-lg border border-border text-base transition-colors hover:border-red disabled:opacity-30"
-                  >
-                    −
-                  </button>
-                  <div className={`min-w-[64px] text-center text-sm font-semibold ${low ? "text-orange" : ""}`}>
-                    {ing.qty} <span className="text-[10px] font-normal text-muted">{ing.unit}</span>
-                  </div>
-                  <button
-                    onClick={() => adjust(ing, 1)}
-                    disabled={busyId === ing._id}
-                    className="h-8 w-8 rounded-lg border border-border text-base transition-colors hover:border-green disabled:opacity-30"
-                  >
-                    +
-                  </button>
-                  <button
-                    onClick={() => adjust(ing, 10)}
-                    disabled={busyId === ing._id}
-                    className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-muted transition-colors hover:border-green hover:text-fg disabled:opacity-30"
-                  >
-                    +10
-                  </button>
+              <div className="flex flex-1 flex-col items-center justify-center gap-0.5 py-2">
+                <div className={`font-display text-4xl leading-none ${low ? "text-orange" : "text-green"}`}>
+                  {ing.qty}
                 </div>
+                <div className="text-xs text-muted">{ing.unit}</div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => adjust(ing, -1)}
+                  disabled={busyId === ing._id || ing.qty === 0}
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border text-lg transition-colors motion-safe:active:scale-95 hover:border-red disabled:opacity-30"
+                >
+                  −
+                </button>
+                <button
+                  onClick={() => adjust(ing, 1)}
+                  disabled={busyId === ing._id}
+                  className="flex h-12 flex-1 items-center justify-center rounded-xl border border-green text-lg text-green transition-colors motion-safe:active:scale-95 disabled:opacity-30"
+                >
+                  +
+                </button>
+                <button
+                  onClick={() => adjust(ing, 10)}
+                  disabled={busyId === ing._id}
+                  className="h-12 shrink-0 rounded-xl border border-border px-3 text-xs text-muted transition-colors motion-safe:active:scale-95 hover:border-green hover:text-fg disabled:opacity-30"
+                >
+                  +10
+                </button>
+              </div>
+
+              <div className="flex gap-2">
                 <button
                   onClick={() => setEditing(ing)}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-green hover:text-fg"
+                  className="flex h-11 flex-1 items-center justify-center rounded-xl border border-border text-sm text-muted transition-colors motion-safe:active:scale-95 hover:border-green hover:text-fg"
                 >
                   Modifier
                 </button>
                 <button
                   onClick={() => handleDelete(ing)}
-                  className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted transition-colors hover:border-red hover:text-red"
+                  aria-label="Supprimer"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border text-base text-muted transition-colors motion-safe:active:scale-95 hover:border-red hover:text-red"
                 >
-                  Supprimer
+                  🗑
                 </button>
               </div>
             </div>

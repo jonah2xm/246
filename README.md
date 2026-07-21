@@ -1,4 +1,4 @@
-# 64.PIZZA — QR Menu (MERN + Next.js)
+# 246 — QR Menu (MERN + Next.js)
 
 Full-stack rebuild of the "QR Code Fast Food Menu" design: scan → browse menu →
 pick size/supplements → cart → place order → confirmation.

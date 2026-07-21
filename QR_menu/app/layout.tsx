@@ -15,7 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "64.PIZZA — Menu",
+  title: "246 — Menu",
   description: "Scannez, commandez, régalez-vous. Pizzeria — livraison & sur place.",
 };
 

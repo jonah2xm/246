@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 
+const { isOriginAllowed } = require("./config/corsOrigins");
 const { router: uploadRoutes } = require("./routes/uploadRoutes");
 
 const menuRoutes = require("./routes/menuRoutes");
@@ -17,18 +18,11 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 
 const app = express();
 
-const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:3000")
-  .split(",")
-  .map((o) => o.trim());
-
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
+      if (isOriginAllowed(origin)) callback(null, true);
+      else callback(new Error("Not allowed by CORS"));
     },
   })
 );

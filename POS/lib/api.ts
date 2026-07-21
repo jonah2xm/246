@@ -9,7 +9,6 @@ import {
   TableInfo,
   TableSessionInfo,
   StaffMember,
-  Shift,
   AnalyticsSummary,
   FeedbackEntry,
 } from "./types";
@@ -52,6 +51,10 @@ export function getActiveOrders(token: string): Promise<StaffOrder[]> {
 
 export function getTodayOrders(token: string): Promise<StaffOrder[]> {
   return request("/orders/today", token);
+}
+
+export function getUnpaidOrders(token: string): Promise<StaffOrder[]> {
+  return request("/orders/unpaid", token);
 }
 
 export function updateOrderStatus(token: string, id: string, status: OrderStatus): Promise<StaffOrder> {
@@ -181,7 +184,7 @@ export function deleteTable(token: string, id: string): Promise<{ ok: boolean }>
 export function updateTable(
   token: string,
   id: string,
-  body: { status?: string; position?: { x: number; y: number }; label?: string; capacity?: number }
+  body: { position?: { x: number; y: number }; label?: string; capacity?: number }
 ): Promise<TableInfo> {
   return request(`/tables/${id}`, token, { method: "PATCH", body: JSON.stringify(body) });
 }
@@ -209,20 +212,12 @@ export function listStaff(token: string): Promise<StaffMember[]> {
   return request("/staff", token);
 }
 
-export function clockIn(token: string): Promise<Shift> {
-  return request("/staff/shifts/clock-in", token, { method: "POST" });
-}
-
-export function clockOut(token: string): Promise<Shift> {
-  return request("/staff/shifts/clock-out", token, { method: "POST" });
-}
-
-export function getMyShift(token: string): Promise<Shift | null> {
-  return request("/staff/shifts/mine", token);
-}
-
 export function getAnalyticsSummary(token: string, date?: string): Promise<AnalyticsSummary> {
   return request(`/analytics/summary${date ? `?date=${date}` : ""}`, token);
+}
+
+export function getTableAnalytics(token: string, date?: string): Promise<import("./types").TableAnalytics> {
+  return request(`/analytics/tables${date ? `?date=${date}` : ""}`, token);
 }
 
 export function getFeedbackList(token: string): Promise<FeedbackEntry[]> {

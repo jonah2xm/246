@@ -85,7 +85,7 @@ function QrBoard() {
             }`}
           >
             <div className="font-display text-2xl tracking-wide print:text-black">
-              64<span className="text-green">.</span>PIZZA
+              24<span className="text-green">6</span>
             </div>
             <div className={`font-display text-xl ${e.accent ? "text-green" : ""} print:text-black`}>{e.title}</div>
             {/* eslint-disable-next-line @next/next/no-img-element */}

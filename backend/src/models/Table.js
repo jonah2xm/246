@@ -7,7 +7,7 @@ const tableSchema = new mongoose.Schema({
   qrSlug: { type: String, required: true, unique: true },
   status: {
     type: String,
-    enum: ["free", "occupied", "awaiting_payment", "needs_cleaning"],
+    enum: ["free", "occupied"],
     default: "free",
   },
 });

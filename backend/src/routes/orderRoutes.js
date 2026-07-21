@@ -4,6 +4,7 @@ const {
   createOrder,
   listActive,
   listToday,
+  listUnpaid,
   updateStatus,
   updateItems,
   markPaid,
@@ -20,6 +21,7 @@ router.get("/:id/status", getPublicStatus);
 // cancellation, but the transition table is enforced server-side anyway.
 router.get("/active", requireAuth, requireRole("kitchen", "manager"), listActive);
 router.get("/today", requireAuth, requireRole("cashier", "manager"), listToday);
+router.get("/unpaid", requireAuth, requireRole("cashier", "manager"), listUnpaid);
 router.patch("/:id/status", requireAuth, requireRole("kitchen", "cashier", "manager"), updateStatus);
 router.patch("/:id/items", requireAuth, requireRole("cashier", "manager"), updateItems);
 router.patch("/:id/pay", requireAuth, requireRole("cashier", "manager"), markPaid);

@@ -28,7 +28,7 @@ export default function MenuScreen({
       <div className="sticky top-0 z-[5] flex items-center justify-between border-b border-border bg-bg/95 px-5 py-4 backdrop-blur-sm">
         <div className="flex items-center gap-2.5">
           <div className="font-display text-2xl tracking-wide">
-            64<span className="text-green">.</span>PIZZA
+            24<span className="text-green">6</span>
           </div>
           {tableLabel && (
             <span className="rounded-full bg-green-soft px-3 py-1 text-xs font-semibold text-green">

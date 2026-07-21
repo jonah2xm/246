@@ -12,7 +12,7 @@ export default function ScanScreen({ onEnter }: { onEnter: () => void }) {
         SCANNEZ POUR COMMANDER
       </div>
       <div className="font-display text-[88px] leading-[0.9] tracking-wide">
-        64<span className="text-green">.</span>PIZZA
+        24<span className="text-green">6</span>
       </div>
       <div className="animate-qr-pulse rounded-[18px] bg-fg p-3.5">
         <div className="grid grid-cols-11 grid-rows-11 gap-0">
