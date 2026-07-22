@@ -80,9 +80,8 @@ function MenuAdmin() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`min-h-12 rounded-xl px-7 py-3 font-display text-lg tracking-wide transition-colors motion-safe:active:scale-95 ${
-              tab === t.key ? "bg-green text-[#08130a]" : "text-muted hover:bg-panel hover:text-fg"
-            }`}
+            className={`min-h-12 rounded-xl px-7 py-3 font-display text-lg tracking-wide transition-colors motion-safe:active:scale-95 ${tab === t.key ? "bg-green text-[#08130a]" : "text-muted hover:bg-panel hover:text-fg"
+              }`}
           >
             {t.label}
           </button>
@@ -156,14 +155,15 @@ function ItemsTab({
 
   return (
     <div className="flex flex-col gap-8 p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-[11px] font-medium uppercase tracking-wide text-muted">Filtrer&nbsp;:</span>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full select-none touch-pan-x">
+
           <button
             onClick={() => setFilterCat("all")}
-            className={`min-h-10 rounded-full border px-4 py-2 text-xs font-medium transition-colors motion-safe:active:scale-95 ${
-              filterCat === "all" ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
-            }`}
+            className={`flex-none min-h-12 rounded-full px-5 py-3 text-sm font-semibold transition-all motion-safe:active:scale-95 ${filterCat === "all"
+                ? "bg-green text-[#08130a] shadow-md shadow-green/20"
+                : "border border-border bg-panel text-muted hover:text-fg hover:border-green/50"
+              }`}
           >
             Toutes ({totalCount})
           </button>
@@ -171,15 +171,16 @@ function ItemsTab({
             <button
               key={cat.key}
               onClick={() => setFilterCat(cat.key)}
-              className={`min-h-10 rounded-full border px-4 py-2 text-xs font-medium transition-colors motion-safe:active:scale-95 ${
-                filterCat === cat.key ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
-              }`}
+              className={`flex-none min-h-12 rounded-full px-5 py-3 text-sm font-semibold transition-all motion-safe:active:scale-95 ${filterCat === cat.key
+                  ? "bg-green text-[#08130a] shadow-md shadow-green/20"
+                  : "border border-border bg-panel text-muted hover:text-fg hover:border-green/50"
+                }`}
             >
               {cat.label} ({cat.items.length})
             </button>
           ))}
         </div>
-        <button onClick={() => setEditing("new")} className={btnPrimary}>
+        <button onClick={() => setEditing("new")} className={`${btnPrimary} shrink-0`}>
           + Nouvel article
         </button>
       </div>
@@ -200,9 +201,8 @@ function ItemsTab({
               {cat.items.map((item) => (
                 <div
                   key={item.id}
-                  className={`flex flex-col overflow-hidden rounded-2xl border transition-colors ${
-                    !item.inStock ? "border-orange" : "border-border"
-                  } bg-panel`}
+                  className={`flex flex-col overflow-hidden rounded-2xl border transition-colors ${!item.inStock ? "border-orange" : "border-border"
+                    } bg-panel`}
                 >
                   <div className="relative aspect-square w-full overflow-hidden bg-panel-2">
                     <PhotoTile src={item.photo} name={item.name} />
@@ -264,11 +264,10 @@ function ItemsTab({
                       <button
                         onClick={() => toggle(item)}
                         disabled={busyId === item.id}
-                        className={`h-11 rounded-xl text-sm font-semibold transition-colors motion-safe:active:scale-[0.97] disabled:opacity-60 ${
-                          item.manualAvailable
+                        className={`h-11 rounded-xl text-sm font-semibold transition-colors motion-safe:active:scale-[0.97] disabled:opacity-60 ${item.manualAvailable
                             ? "bg-green text-[#08130a]"
                             : "border border-border bg-panel-2 text-muted"
-                        }`}
+                          }`}
                       >
                         {item.manualAvailable ? "Disponible" : "Épuisé — réactiver"}
                       </button>
@@ -426,9 +425,8 @@ function ItemFormModal({
               key={c.key}
               type="button"
               onClick={() => setCategoryKey(c.key)}
-              className={`rounded-xl border px-4 py-3 text-sm font-medium transition-colors motion-safe:active:scale-95 ${
-                categoryKey === c.key ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
-              }`}
+              className={`rounded-xl border px-4 py-3 text-sm font-medium transition-colors motion-safe:active:scale-95 ${categoryKey === c.key ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
+                }`}
             >
               {c.label}
             </button>
@@ -444,9 +442,8 @@ function ItemFormModal({
               key={s}
               type="button"
               onClick={() => setStation(s)}
-              className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium capitalize transition-colors motion-safe:active:scale-95 ${
-                station === s ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
-              }`}
+              className={`flex-1 rounded-xl border px-4 py-3 text-sm font-medium capitalize transition-colors motion-safe:active:scale-95 ${station === s ? "border-green bg-green-soft text-green" : "border-border text-muted hover:text-fg"
+                }`}
             >
               {s}
             </button>
@@ -787,9 +784,8 @@ function IngredientsTab({
           return (
             <div
               key={ing._id}
-              className={`flex flex-col gap-3 rounded-2xl border p-4 transition-colors ${
-                low ? "border-orange bg-orange-soft" : "border-border bg-panel"
-              }`}
+              className={`flex flex-col gap-3 rounded-2xl border p-4 transition-colors ${low ? "border-orange bg-orange-soft" : "border-border bg-panel"
+                }`}
             >
               <div>
                 <div className="font-display text-lg leading-tight">{ing.name}</div>

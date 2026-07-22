@@ -245,13 +245,15 @@ function NewOrderFlow() {
           <div className="flex flex-1 flex-col gap-5 px-5 pb-5 lg:flex-row lg:items-start">
             {/* Menu — categories + item tiles */}
             <div className="min-w-0 flex-1">
-              <div className="flex gap-2 overflow-x-auto pt-4 pb-1">
+              <div className="flex gap-2.5 overflow-x-auto pt-4 pb-1 select-none touch-pan-x">
                 {categories.map((c) => (
                   <button
                     key={c.key}
                     onClick={() => setActiveCat(c.key)}
-                    className={`flex-none rounded-full px-5 py-3 text-sm font-medium transition-colors motion-safe:active:scale-95 ${
-                      activeCat === c.key ? "bg-green text-[#08130a]" : "bg-panel text-muted hover:text-fg"
+                    className={`flex-none min-h-12 rounded-full px-5 py-3 text-sm font-semibold transition-all motion-safe:active:scale-95 ${
+                      activeCat === c.key
+                        ? "bg-green text-[#08130a] shadow-md shadow-green/20"
+                        : "border border-border bg-panel text-muted hover:text-fg hover:border-green/50"
                     }`}
                   >
                     {c.label}
