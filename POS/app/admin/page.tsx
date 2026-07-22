@@ -187,9 +187,14 @@ function ItemsTab({
 
       {visibleCategories.map((cat) => (
         <div key={cat.key}>
-          <div className="mb-3.5 flex items-baseline gap-2.5">
-            <div className="font-display text-2xl text-green">{cat.label}</div>
-            <div className="text-xs text-muted">{cat.items.length} article(s)</div>
+          <div className="mb-4 flex items-center justify-between border-b border-border/40 pb-2.5 pt-2">
+            <div className="flex items-center gap-3">
+              <span className="h-6 w-1.5 rounded-full bg-green" />
+              <h2 className="font-display text-2xl tracking-wide text-fg">{cat.label}</h2>
+              <span className="rounded-full border border-border bg-panel-2 px-3 py-0.5 text-xs font-semibold text-muted">
+                {cat.items.length} article(s)
+              </span>
+            </div>
           </div>
 
           {cat.items.length === 0 ? (
