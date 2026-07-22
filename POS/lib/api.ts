@@ -189,14 +189,6 @@ export function updateTable(
   return request(`/tables/${id}`, token, { method: "PATCH", body: JSON.stringify(body) });
 }
 
-export function mergeTables(token: string, tableIds: string[]): Promise<TableSessionInfo> {
-  return request("/tables/merge", token, { method: "POST", body: JSON.stringify({ tableIds }) });
-}
-
-export function splitSession(token: string, sessionId: string): Promise<TableSessionInfo[]> {
-  return request(`/tables/sessions/${sessionId}/split`, token, { method: "PATCH" });
-}
-
 export function assignStaffToSession(token: string, sessionId: string, staffId: string): Promise<TableSessionInfo> {
   return request(`/tables/sessions/${sessionId}/assign`, token, {
     method: "PATCH",
