@@ -41,13 +41,20 @@ const TABLE_STATUS_DOT: Record<TableStatus, string> = {
   occupied: "bg-green",
 };
 
-function PaymentFilterBar({ value, onChange }: { value: "unpaid" | "paid"; onChange: (v: "unpaid" | "paid") => void }) {
+function PaymentFilterBar({
+  value,
+  onChange,
+}: {
+  value: "unpaid" | "paid" | "cancelled";
+  onChange: (v: "unpaid" | "paid" | "cancelled") => void;
+}) {
   return (
     <div className="flex items-center gap-2 px-5">
       {(
         [
           ["unpaid", "Non payé"],
           ["paid", "Payé"],
+          ["cancelled", "Annulée"],
         ] as const
       ).map(([key, label]) => (
         <button
@@ -143,7 +150,7 @@ function CashierList() {
   const [cashGiven, setCashGiven] = useState("");
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
   const [showCounter, setShowCounter] = useState(false);
-  const [paymentFilter, setPaymentFilter] = useState<"unpaid" | "paid">("unpaid");
+  const [paymentFilter, setPaymentFilter] = useState<"unpaid" | "paid" | "cancelled">("unpaid");
 
   useEffect(() => {
     setCashGiven("");
@@ -241,7 +248,11 @@ function CashierList() {
   const tableOrders = selectedTable ? ordersByTable.get(selectedTable.label) ?? [] : [];
   const counterOrders = ordersByTable.get("__counter__") ?? [];
 
-  const matchesFilter = (o: StaffOrder) => (paymentFilter === "paid" ? o.payment.status === "paid" : o.payment.status === "pending");
+  const matchesFilter = (o: StaffOrder) => {
+    if (paymentFilter === "cancelled") return o.status === "cancelled";
+    if (paymentFilter === "paid") return o.payment.status === "paid" && o.status !== "cancelled";
+    return o.payment.status === "pending" && o.status !== "cancelled";
+  };
   const filteredTableOrders = tableOrders.filter(matchesFilter);
   const filteredCounterOrders = counterOrders.filter(matchesFilter);
 
@@ -387,7 +398,7 @@ function CashierList() {
 
           {filteredTableOrders.length === 0 ? (
             <div className="mx-5 mt-5 rounded-2xl border border-dashed border-border py-14 text-center text-muted">
-              Aucune commande {paymentFilter === "paid" ? "payée" : "non payée"} pour cette table aujourd&apos;hui.
+              Aucune commande {paymentFilter === "paid" ? "payée" : paymentFilter === "cancelled" ? "annulée" : "non payée"} pour cette table aujourd&apos;hui.
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
@@ -425,7 +436,7 @@ function CashierList() {
 
           {filteredCounterOrders.length === 0 ? (
             <div className="mx-5 mt-5 rounded-2xl border border-dashed border-border py-14 text-center text-muted">
-              Aucune commande {paymentFilter === "paid" ? "payée" : "non payée"} au comptoir aujourd&apos;hui.
+              Aucune commande {paymentFilter === "paid" ? "payée" : paymentFilter === "cancelled" ? "annulée" : "non payée"} au comptoir aujourd&apos;hui.
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
