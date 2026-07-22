@@ -12,17 +12,17 @@ export default function CategoryPills({
   onSelect: (key: string) => void;
 }) {
   return (
-    <div className="flex gap-2.5 overflow-x-auto px-5 pb-2 pt-5">
+    <div className="flex gap-2 overflow-x-auto px-5 pb-2 pt-5">
       {categories.map((cat) => {
         const isActive = cat.key === active;
         return (
           <button
             key={cat.key}
             onClick={() => onSelect(cat.key)}
-            className={`flex-none rounded-full border px-5 py-2.5 font-display text-[15px] tracking-wide transition-colors ${
+            className={`flex-none min-h-11 rounded-full border px-5 py-2.5 text-sm font-medium tracking-wide transition-colors motion-safe:active:scale-95 ${
               isActive
-                ? "border-green bg-green text-[#08130a]"
-                : "border-border bg-transparent text-fg"
+                ? "border-green bg-green text-[#08130a] font-semibold"
+                : "border-border bg-transparent text-fg hover:bg-panel hover:text-fg"
             }`}
           >
             {cat.label}

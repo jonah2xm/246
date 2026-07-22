@@ -71,7 +71,7 @@ function StandardDetailSheet({
   return (
     <SheetShell title={item.name} desc={item.desc} onClose={onClose}>
       <div>
-        <div className="mb-2 text-xs uppercase tracking-wide text-muted">Taille</div>
+        <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Taille</div>
         <div className="flex gap-2.5">
           {item.sizes.map((sz, idx) => {
             const isActive = idx === sizeIdx;
@@ -79,8 +79,8 @@ function StandardDetailSheet({
               <button
                 key={sz.label}
                 onClick={() => setSizeIdx(idx)}
-                className={`flex-1 rounded-xl border p-3 text-sm font-bold ${
-                  isActive ? "border-green bg-green text-[#08130a]" : "border-border bg-transparent text-fg"
+                className={`flex-1 min-h-11 rounded-xl border p-3 text-sm font-bold transition-colors motion-safe:active:scale-95 ${
+                  isActive ? "border-green bg-green text-[#08130a]" : "border-border bg-transparent text-fg hover:border-green"
                 }`}
               >
                 {sz.label} — {sz.price} DA
@@ -92,7 +92,7 @@ function StandardDetailSheet({
 
       {showSupplements && (
         <div>
-          <div className="mb-2 text-xs uppercase tracking-wide text-muted">Suppléments</div>
+          <div className="mb-2 text-xs font-medium uppercase tracking-wide text-muted">Suppléments</div>
           <div className="flex flex-col gap-2">
             {supplements.map((s) => {
               const checked = !!selectedSupp[s.key];
@@ -100,12 +100,12 @@ function StandardDetailSheet({
                 <button
                   key={s.key}
                   onClick={() => toggleSupp(s.key)}
-                  className={`flex items-center justify-between rounded-[10px] border px-3.5 py-2.5 text-[13px] ${
-                    checked ? "border-green bg-green-soft" : "border-border bg-transparent"
+                  className={`flex items-center justify-between rounded-xl border px-4 py-3 text-[13px] transition-colors motion-safe:active:scale-[0.97] ${
+                    checked ? "border-green bg-green-soft" : "border-border bg-transparent hover:border-green/50"
                   }`}
                 >
                   <span>{s.label}</span>
-                  <span className="text-green">+{s.price} DA</span>
+                  <span className="font-semibold text-green">+{s.price} DA</span>
                 </button>
               );
             })}
@@ -114,16 +114,19 @@ function StandardDetailSheet({
       )}
 
       <div className="flex items-center justify-between">
-        <div className="text-xs uppercase tracking-wide text-muted">Quantité</div>
-        <div className="flex items-center gap-3.5">
+        <div className="text-xs font-medium uppercase tracking-wide text-muted">Quantité</div>
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setQty((q) => Math.max(1, q - 1))}
-            className="h-[34px] w-[34px] rounded-lg border border-border text-lg"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-lg transition-colors motion-safe:active:scale-90"
           >
             −
           </button>
-          <div className="min-w-[20px] text-center text-base">{qty}</div>
-          <button onClick={() => setQty((q) => q + 1)} className="h-[34px] w-[34px] rounded-lg border border-border text-lg">
+          <div className="min-w-[24px] text-center font-display text-lg">{qty}</div>
+          <button
+            onClick={() => setQty((q) => q + 1)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-green text-lg text-green transition-colors motion-safe:active:scale-90"
+          >
             +
           </button>
         </div>
@@ -131,7 +134,7 @@ function StandardDetailSheet({
 
       <button
         onClick={handleAddToCart}
-        className="mt-1 flex justify-between rounded-2xl bg-green px-5 py-4 font-display text-lg tracking-wide text-[#08130a]"
+        className="mt-1 flex justify-between rounded-2xl bg-green px-5 py-4 font-display text-lg tracking-wide text-[#08130a] transition-colors motion-safe:active:scale-[0.97] hover:bg-green-hover"
       >
         <span>AJOUTER AU PANIER</span>
         <span>{totalPrice} DA</span>
@@ -189,13 +192,13 @@ function ComboDetailSheet({
 
   return (
     <SheetShell title={item.name} desc={item.desc} onClose={onClose}>
-      <div className="flex items-center justify-between rounded-xl bg-panel px-4 py-3">
+      <div className="flex items-center justify-between rounded-xl border border-border bg-panel px-4 py-3">
         <span className="text-sm">{size.label}</span>
         <span className="font-display text-lg text-green">{size.price} DA</span>
       </div>
 
       <div>
-        <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-wide text-muted">
+        <div className="mb-2 flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted">
           <span>Choisissez {comboConfig.picks} pizzas</span>
           <span className={remaining === 0 ? "text-green" : ""}>{selected.length}/{comboConfig.picks}</span>
         </div>
@@ -206,7 +209,7 @@ function ComboDetailSheet({
               <button
                 key={`${s.name}-${idx}`}
                 onClick={() => removeAt(idx)}
-                className="rounded-full border border-green bg-green-soft px-3 py-1 text-[12px] text-green"
+                className="rounded-full border border-green bg-green-soft px-3 py-1 text-[12px] text-green transition-colors motion-safe:active:scale-95"
               >
                 {s.name} ✕
               </button>
@@ -220,7 +223,7 @@ function ComboDetailSheet({
               key={pizza.id}
               onClick={() => pick(pizza)}
               disabled={remaining <= 0}
-              className="rounded-xl border border-border bg-transparent p-2.5 text-left text-[13px] disabled:opacity-40"
+              className="rounded-xl border border-border bg-transparent p-3 text-left text-[13px] transition-colors motion-safe:active:scale-[0.97] hover:border-green disabled:opacity-40"
             >
               {pizza.name}
             </button>
@@ -231,7 +234,7 @@ function ComboDetailSheet({
       <button
         onClick={handleAddToCart}
         disabled={selected.length !== comboConfig.picks}
-        className="mt-1 flex justify-between rounded-2xl bg-green px-5 py-4 font-display text-lg tracking-wide text-[#08130a] disabled:opacity-50"
+        className="mt-1 flex justify-between rounded-2xl bg-green px-5 py-4 font-display text-lg tracking-wide text-[#08130a] transition-colors motion-safe:active:scale-[0.97] hover:bg-green-hover disabled:opacity-50"
       >
         <span>AJOUTER AU PANIER</span>
         <span>{size.price} DA</span>
@@ -252,14 +255,20 @@ function SheetShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/70">
-      <div className="flex max-h-[88vh] w-full max-w-[520px] flex-col gap-4 overflow-y-auto rounded-t-[20px] bg-panel-2 px-5 pb-7 pt-6">
+    <div className="fixed inset-0 z-20 flex items-end justify-center bg-black/70 animate-fade-in" onClick={onClose}>
+      <div
+        className="flex max-h-[88vh] w-full max-w-[520px] flex-col gap-4 overflow-y-auto rounded-t-3xl border border-border border-b-0 bg-panel-2 px-5 pb-7 pt-6 shadow-2xl animate-fade-in-up"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-start justify-between">
           <div>
-            <div className="font-display text-[25px]">{title}</div>
+            <div className="font-display text-[25px] tracking-wide">{title}</div>
             <div className="mt-1 text-[13px] text-muted">{desc}</div>
           </div>
-          <button onClick={onClose} className="text-[22px] leading-none text-muted">
+          <button
+            onClick={onClose}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xl leading-none text-muted transition-colors hover:bg-panel hover:text-fg"
+          >
             ✕
           </button>
         </div>

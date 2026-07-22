@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     // r2.dev domain (or a custom domain, if one gets attached later).
     remotePatterns: [{ protocol: "https", hostname: "*.r2.dev", pathname: "/**" }],
   },
+
 };
 
 export default nextConfig;

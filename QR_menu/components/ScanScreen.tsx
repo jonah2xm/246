@@ -26,7 +26,7 @@ export default function ScanScreen({ onEnter }: { onEnter: () => void }) {
       </div>
       <button
         onClick={onEnter}
-        className="mt-1.5 rounded-full bg-green px-11 py-4 font-display text-[19px] tracking-widest text-[#08130a] transition-colors hover:bg-green-hover"
+        className="mt-1.5 rounded-full bg-green px-11 py-4 font-display text-[19px] tracking-widest text-[#08130a] transition-colors motion-safe:active:scale-95 hover:bg-green-hover"
       >
         VOIR LE MENU
       </button>
