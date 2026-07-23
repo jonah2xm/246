@@ -23,6 +23,7 @@ export default function ConfirmScreen({
   scheduledFor,
   loyaltyPoints,
   onNewOrder,
+  onSettled,
 }: {
   orderId: string;
   orderNumber: number;
@@ -31,6 +32,7 @@ export default function ConfirmScreen({
   scheduledFor: string | null;
   loyaltyPoints: { earned: number; balance: number } | null;
   onNewOrder: () => void;
+  onSettled: () => void;
 }) {
   const [status, setStatus] = useState<OrderStatus>("new");
   const [paymentStatus, setPaymentStatus] = useState<"pending" | "paid">("pending");
@@ -45,12 +47,17 @@ export default function ConfirmScreen({
     }) {
       setStatus(update.status);
       setPaymentStatus(update.payment.status);
+      // Paid or voided closes the table's tab — the next visit starts fresh.
+      if (update.payment.status === "paid" || update.status === "cancelled") {
+        onSettled();
+      }
     }
 
     socket.on("order:status", handleStatus);
     return () => {
       socket.off("order:status", handleStatus);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
   const stepIndex = STATUS_STEPS.indexOf(status);

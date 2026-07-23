@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getMenu, placeOrder, lookupTable } from "@/lib/api";
+import { getMenu, placeOrder, lookupTable, getPendingTableOrder, updateOrderItems } from "@/lib/api";
 import { getSocket } from "@/lib/socket";
 import { CartProvider, useCart } from "@/lib/cart-context";
 import { MenuItemDTO, MenuResponse, OrderMode, PaymentMethod } from "@/lib/types";
@@ -30,6 +30,12 @@ interface CheckoutOptions {
   customerPhone: string | null;
 }
 
+interface ExistingOrder {
+  orderId: string;
+  orderNumber: number;
+  paymentMethod: PaymentMethod;
+}
+
 function OrderApp() {
   const [screen, setScreen] = useState<Screen>("scan");
   const [menu, setMenu] = useState<MenuResponse | null>(null);
@@ -41,24 +47,41 @@ function OrderApp() {
   const [tableSlug, setTableSlug] = useState<string | null>(null);
   const [tableLabel, setTableLabel] = useState<string | null>(null);
   const [tableInvalid, setTableInvalid] = useState(false);
+  const [existingOrder, setExistingOrder] = useState<ExistingOrder | null>(null);
 
-  const { cart, clear } = useCart();
+  const { cart, clear, hydrate } = useCart();
 
   useEffect(() => {
     const slug = new URLSearchParams(window.location.search).get("table");
     if (!slug) return;
     lookupTable(slug)
       .then((table) => {
-        if (table) {
-          setTableSlug(slug);
-          setTableLabel(table.label);
-        } else {
+        if (!table) {
           setTableInvalid(true);
+          return;
         }
+        setTableSlug(slug);
+        setTableLabel(table.label);
+
+        // The table may already have an open, unpaid, not-yet-fired order —
+        // e.g. the customer re-scanned the QR code before paying at the
+        // counter. Resume it instead of letting them build a duplicate.
+        getPendingTableOrder(slug)
+          .then((pending) => {
+            if (!pending) return;
+            setExistingOrder({
+              orderId: pending.orderId,
+              orderNumber: pending.orderNumber,
+              paymentMethod: pending.paymentMethod,
+            });
+            hydrate(pending.items);
+          })
+          .catch(() => {});
       })
       .catch(() => {
         // Backend unreachable — don't block browsing, just skip table association.
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -88,7 +111,19 @@ function OrderApp() {
     if (cart.length === 0) return;
     setPlacing(true);
     try {
-      const result = await placeOrder(ORDER_MODE, cart, paymentMethod, { tableSlug, ...options });
+      let result;
+      if (existingOrder) {
+        try {
+          // Still-open, unpaid, not-yet-fired — fold the current cart into it.
+          result = await updateOrderItems(existingOrder.orderId, cart);
+        } catch {
+          // The kitchen must have started (or it got paid) in the meantime —
+          // that tab is closed, so this is legitimately a new round.
+          result = await placeOrder(ORDER_MODE, cart, paymentMethod, { tableSlug, ...options });
+        }
+      } else {
+        result = await placeOrder(ORDER_MODE, cart, paymentMethod, { tableSlug, ...options });
+      }
       setConfirmData({
         orderId: result.orderId,
         orderNumber: result.orderNumber,
@@ -97,13 +132,27 @@ function OrderApp() {
         scheduledFor: result.scheduledFor,
         loyaltyPoints: result.loyaltyPoints,
       });
-      clear();
+      // Keep tracking this order as the table's open tab — the cart stays in
+      // sync with it so re-entering the menu resumes the same order, right
+      // up until it's paid or cancelled (see handleOrderSettled below).
+      if (tableSlug) {
+        setExistingOrder({ orderId: result.orderId, orderNumber: result.orderNumber, paymentMethod: result.paymentMethod });
+      } else {
+        clear();
+      }
       setScreen("confirm");
     } catch {
       setLoadError("La commande n'a pas pu être envoyée. Réessayez.");
     } finally {
       setPlacing(false);
     }
+  }
+
+  // The table's tab closes once its order is paid (or voided) — the next
+  // visit should start clean instead of resuming a settled order.
+  function handleOrderSettled() {
+    clear();
+    setExistingOrder(null);
   }
 
   if (tableInvalid) {
@@ -157,6 +206,7 @@ function OrderApp() {
           onOpenItem={(catKey, item) => setDetail({ catKey, item })}
           onGoToCart={() => setScreen("cart")}
           tableLabel={tableLabel}
+          existingOrderNumber={existingOrder?.orderNumber ?? null}
         />
       )}
 
@@ -166,6 +216,7 @@ function OrderApp() {
           onBack={() => setScreen("menu")}
           onPlaceOrder={handlePlaceOrder}
           placing={placing}
+          existingOrderNumber={existingOrder?.orderNumber ?? null}
         />
       )}
 
@@ -178,6 +229,7 @@ function OrderApp() {
           scheduledFor={confirmData.scheduledFor}
           loyaltyPoints={confirmData.loyaltyPoints}
           onNewOrder={() => setScreen("menu")}
+          onSettled={handleOrderSettled}
         />
       )}
 

@@ -79,3 +79,18 @@ export interface PublicOrderStatus {
   status: OrderStatus;
   payment: { method: PaymentMethod; status: "pending" | "paid" };
 }
+
+export interface PendingTableOrder {
+  orderId: string;
+  orderNumber: number;
+  items: {
+    name: string;
+    sizeLabel: string;
+    unitPrice: number;
+    qty: number;
+    supplements: string[];
+    comboSelections: ComboSelection[];
+  }[];
+  total: number;
+  paymentMethod: PaymentMethod;
+}

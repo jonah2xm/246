@@ -9,6 +9,8 @@ const {
   updateItems,
   markPaid,
   getPublicStatus,
+  getTablePendingOrder,
+  updateItemsPublic,
 } = require("../controllers/orderController");
 
 const router = express.Router();
@@ -16,6 +18,8 @@ const router = express.Router();
 // Customer-facing
 router.post("/", createOrder);
 router.get("/:id/status", getPublicStatus);
+router.get("/table/:slug/pending", getTablePendingOrder);
+router.patch("/:id/items/public", updateItemsPublic);
 
 // Staff-facing. Cashier can update status too — their UI only exposes
 // cancellation, but the transition table is enforced server-side anyway.

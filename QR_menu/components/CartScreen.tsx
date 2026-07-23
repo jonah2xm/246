@@ -9,6 +9,8 @@ const CHECKOUT_LABEL: Record<OrderMode, string> = {
   delivery: "COMMANDER",
 };
 
+const UPDATE_LABEL = "METTRE À JOUR LA COMMANDE";
+
 function buildSlots(): { label: string; iso: string }[] {
   const slots: { label: string; iso: string }[] = [];
   const start = new Date();
@@ -25,13 +27,16 @@ export default function CartScreen({
   onBack,
   onPlaceOrder,
   placing,
+  existingOrderNumber,
 }: {
   mode: OrderMode;
   onBack: () => void;
   onPlaceOrder: (paymentMethod: PaymentMethod, options: { scheduledFor: string | null; customerPhone: string | null }) => void;
   placing: boolean;
+  existingOrderNumber?: number | null;
 }) {
   const { cart, cartTotal, inc, dec, remove } = useCart();
+  const editing = !!existingOrderNumber;
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [scheduledFor, setScheduledFor] = useState<string | null>(null);
   const [phone, setPhone] = useState("");
@@ -106,63 +111,72 @@ export default function CartScreen({
           </div>
 
           <div className="mt-6 flex flex-col gap-4 border-t border-border pt-4">
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted">Retrait</div>
-            <div className="flex gap-2 overflow-x-auto pb-1 touch-pan-x">
-              <button
-                onClick={() => setScheduledFor(null)}
-                className={`flex-none min-h-12 rounded-full border px-5 py-3 text-xs font-semibold transition-all motion-safe:active:scale-95 ${
-                  scheduledFor === null ? "border-green bg-green-soft text-green" : "border-border bg-panel text-muted hover:border-green/50"
-                }`}
-              >
-                Dès que possible
-              </button>
-              {slots.map((s) => (
-                <button
-                  key={s.iso}
-                  onClick={() => setScheduledFor(s.iso)}
-                  className={`flex-none min-h-12 rounded-full border px-5 py-3 text-xs font-semibold transition-all motion-safe:active:scale-95 ${
-                    scheduledFor === s.iso ? "border-green bg-green-soft text-green" : "border-border bg-panel text-muted hover:border-green/50"
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
+            {editing ? (
+              <div className="rounded-xl border border-orange bg-orange-soft px-4 py-3 text-xs text-orange">
+                Vous modifiez la commande <span className="font-bold">#{existingOrderNumber}</span>, pas encore
+                envoyée en cuisine. Le mode de paiement et l&apos;heure de retrait restent ceux choisis au départ.
+              </div>
+            ) : (
+              <>
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted">Retrait</div>
+                <div className="flex gap-2 overflow-x-auto pb-1 touch-pan-x">
+                  <button
+                    onClick={() => setScheduledFor(null)}
+                    className={`flex-none min-h-12 rounded-full border px-5 py-3 text-xs font-semibold transition-all motion-safe:active:scale-95 ${
+                      scheduledFor === null ? "border-green bg-green-soft text-green" : "border-border bg-panel text-muted hover:border-green/50"
+                    }`}
+                  >
+                    Dès que possible
+                  </button>
+                  {slots.map((s) => (
+                    <button
+                      key={s.iso}
+                      onClick={() => setScheduledFor(s.iso)}
+                      className={`flex-none min-h-12 rounded-full border px-5 py-3 text-xs font-semibold transition-all motion-safe:active:scale-95 ${
+                        scheduledFor === s.iso ? "border-green bg-green-soft text-green" : "border-border bg-panel text-muted hover:border-green/50"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
 
-            <div className="text-xs font-semibold uppercase tracking-wider text-muted">Mode de paiement</div>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setPaymentMethod("cash")}
-                className={`min-h-12 rounded-xl border-2 py-3.5 text-sm font-semibold transition-all motion-safe:active:scale-95 ${
-                  paymentMethod === "cash"
-                    ? "border-green bg-green text-[#08130a] shadow-md shadow-green/20"
-                    : "border-border bg-panel text-muted hover:border-green/50"
-                }`}
-              >
-                Espèces
-              </button>
-              <button
-                onClick={() => setPaymentMethod("tpe")}
-                className={`min-h-12 rounded-xl border-2 py-3.5 text-sm font-semibold transition-all motion-safe:active:scale-95 ${
-                  paymentMethod === "tpe"
-                    ? "border-green bg-green text-[#08130a] shadow-md shadow-green/20"
-                    : "border-border bg-panel text-muted hover:border-green/50"
-                }`}
-              >
-                Carte (TPE)
-              </button>
-            </div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted">Mode de paiement</div>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setPaymentMethod("cash")}
+                    className={`min-h-12 rounded-xl border-2 py-3.5 text-sm font-semibold transition-all motion-safe:active:scale-95 ${
+                      paymentMethod === "cash"
+                        ? "border-green bg-green text-[#08130a] shadow-md shadow-green/20"
+                        : "border-border bg-panel text-muted hover:border-green/50"
+                    }`}
+                  >
+                    Espèces
+                  </button>
+                  <button
+                    onClick={() => setPaymentMethod("tpe")}
+                    className={`min-h-12 rounded-xl border-2 py-3.5 text-sm font-semibold transition-all motion-safe:active:scale-95 ${
+                      paymentMethod === "tpe"
+                        ? "border-green bg-green text-[#08130a] shadow-md shadow-green/20"
+                        : "border-border bg-panel text-muted hover:border-green/50"
+                    }`}
+                  >
+                    Carte (TPE)
+                  </button>
+                </div>
 
-            <div className="flex flex-col gap-1.5">
-              <div className="text-xs font-semibold uppercase tracking-wider text-muted">Téléphone (points fidélité, facultatif)</div>
-              <input
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                inputMode="tel"
-                placeholder="06 12 34 56 78"
-                className="min-h-12 rounded-xl border border-border bg-panel px-4 py-3 text-sm outline-none transition-colors focus:border-green"
-              />
-            </div>
+                <div className="flex flex-col gap-1.5">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted">Téléphone (points fidélité, facultatif)</div>
+                  <input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    inputMode="tel"
+                    placeholder="06 12 34 56 78"
+                    className="min-h-12 rounded-xl border border-border bg-panel px-4 py-3 text-sm outline-none transition-colors focus:border-green"
+                  />
+                </div>
+              </>
+            )}
 
             <div className="flex items-center justify-between border-t border-border pt-4">
               <span className="font-display text-xl">Total</span>
@@ -173,7 +187,7 @@ export default function CartScreen({
               disabled={placing}
               className="h-14 w-full rounded-2xl bg-green font-display text-xl tracking-wide text-[#08130a] shadow-xl shadow-green/20 transition-all motion-safe:active:scale-[0.98] hover:bg-green-hover disabled:opacity-60"
             >
-              {placing ? "…" : CHECKOUT_LABEL[mode]}
+              {placing ? "…" : editing ? UPDATE_LABEL : CHECKOUT_LABEL[mode]}
             </button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { CartItem, MenuResponse, OrderMode, PaymentMethod, PlaceOrderOptions, PlaceOrderResult } from "./types";
+import { CartItem, MenuResponse, OrderMode, PaymentMethod, PendingTableOrder, PlaceOrderOptions, PlaceOrderResult } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
@@ -43,6 +43,34 @@ export async function lookupTable(slug: string): Promise<{ label: string } | nul
   if (res.status === 404) return null;
   if (!res.ok) throw new Error("Lookup failed");
   return res.json();
+}
+
+// Finds the table's still-open, not-yet-fired, unpaid order (if any) — used
+// to resume it instead of starting a duplicate when re-entering the menu.
+export async function getPendingTableOrder(slug: string): Promise<PendingTableOrder | null> {
+  const res = await fetch(`${API_URL}/orders/table/${encodeURIComponent(slug)}/pending`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Lookup failed");
+  return res.json();
+}
+
+export async function updateOrderItems(orderId: string, items: CartItem[]): Promise<PlaceOrderResult> {
+  const res = await fetch(`${API_URL}/orders/${orderId}/items/public`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      items: items.map((i) => ({
+        name: i.name,
+        sizeLabel: i.sizeLabel,
+        unitPrice: i.unitPrice,
+        qty: i.qty,
+        supplements: i.supplements,
+        comboSelections: i.comboSelections,
+      })),
+    }),
+  });
+  if (!res.ok) throw new Error("Failed to update order");
+  const data = await res.json();
+  return { ...data, loyaltyPoints: null };
 }
 
 export async function submitFeedback(orderId: string, rating: number, comment: string): Promise<void> {

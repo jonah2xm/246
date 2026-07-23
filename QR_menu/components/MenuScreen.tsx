@@ -12,6 +12,7 @@ export default function MenuScreen({
   onOpenItem,
   onGoToCart,
   tableLabel,
+  existingOrderNumber,
 }: {
   categories: Category[];
   activeCategory: string;
@@ -19,6 +20,7 @@ export default function MenuScreen({
   onOpenItem: (catKey: string, item: MenuItemDTO) => void;
   onGoToCart: () => void;
   tableLabel?: string | null;
+  existingOrderNumber?: number | null;
 }) {
   const { cartCount, cartTotal } = useCart();
   const activeCat = categories.find((c) => c.key === activeCategory) ?? categories[0];
@@ -34,6 +36,11 @@ export default function MenuScreen({
           {tableLabel && (
             <span className="rounded-full bg-green-soft px-3 py-1 text-xs font-semibold text-green">
               Table {tableLabel}
+            </span>
+          )}
+          {existingOrderNumber && (
+            <span className="rounded-full bg-orange-soft px-3 py-1 text-xs font-semibold text-orange">
+              Commande #{existingOrderNumber} en cours
             </span>
           )}
         </div>

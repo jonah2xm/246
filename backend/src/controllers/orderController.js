@@ -341,32 +341,92 @@ async function markPaid(req, res, next) {
   }
 }
 
-// Caisse edits an order's line items (customer changed their mind at the
-// counter). Only before the kitchen starts and before payment — after that,
-// cancel/refund is the correct path, not silent rewriting.
+// Shared by the staff and customer item-edit endpoints: only before the
+// kitchen starts and before payment — after that, cancel/refund is the
+// correct path, not silent rewriting.
+async function applyItemsUpdate(order, items) {
+  if (order.status !== "new") {
+    return { status: 409, error: "La cuisine a déjà commencé — modification impossible. Annulez la commande." };
+  }
+  if (order.payment.status === "paid") {
+    return { status: 409, error: "Commande déjà encaissée — modification impossible." };
+  }
+
+  const prepared = await prepareItems(items);
+  if (prepared.error) return { status: prepared.status, error: prepared.error };
+
+  order.items = prepared.items;
+  order.total = prepared.items.reduce((sum, it) => sum + it.unitPrice * it.qty, 0);
+  await order.save();
+
+  const dto = await staffOrderWithTable(order);
+  getIO().to("staff").emit("order:updated", dto);
+  getIO().to(`order:${order._id}`).emit("order:status", publicOrder(order));
+  return { dto };
+}
+
+// Caisse edits an order's line items (customer changed their mind at the counter).
 async function updateItems(req, res, next) {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: "Order not found" });
-    if (order.status !== "new") {
-      return res.status(409).json({ error: "La cuisine a déjà commencé — modification impossible. Annulez la commande." });
-    }
-    if (order.payment.status === "paid") {
-      return res.status(409).json({ error: "Commande déjà encaissée — modification impossible." });
-    }
 
-    const prepared = await prepareItems(req.body.items);
-    if (prepared.error) return res.status(prepared.status).json({ error: prepared.error });
+    const result = await applyItemsUpdate(order, req.body.items);
+    if (result.error) return res.status(result.status).json({ error: result.error });
+    res.json(result.dto);
+  } catch (err) {
+    next(err);
+  }
+}
 
-    order.items = prepared.items;
-    order.total = prepared.items.reduce((sum, it) => sum + it.unitPrice * it.qty, 0);
-    await order.save();
+// Customer-facing: finds the table's still-open, not-yet-fired, unpaid order
+// (if any) so the QR menu can resume it instead of spawning a duplicate when
+// the customer re-scans/re-opens the menu before paying at the counter.
+async function getTablePendingOrder(req, res, next) {
+  try {
+    const table = await Table.findOne({ qrSlug: req.params.slug });
+    if (!table) return res.status(404).json({ error: "Table invalide" });
 
-    const dto = await staffOrderWithTable(order);
-    getIO().to("staff").emit("order:updated", dto);
-    getIO().to(`order:${order._id}`).emit("order:status", publicOrder(order));
+    const session = await TableSession.findOne({ tableIds: table._id, status: "open" });
+    if (!session) return res.json(null);
 
-    res.json(dto);
+    const order = await Order.findOne({ sessionId: session._id, status: "new", "payment.status": "pending" }).sort({
+      createdAt: -1,
+    });
+    if (!order) return res.json(null);
+
+    res.json({
+      orderId: order._id,
+      orderNumber: order.orderNumber,
+      items: order.items,
+      total: order.total,
+      paymentMethod: order.payment.method,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// Customer-facing: resumes/edits their own not-yet-fired, unpaid order —
+// used when the QR menu finds one via getTablePendingOrder. Same guardrails
+// as the staff version; knowledge of the order id is the only "credential",
+// same trust model already used by the public status/watch endpoints.
+async function updateItemsPublic(req, res, next) {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: "Order not found" });
+
+    const result = await applyItemsUpdate(order, req.body.items);
+    if (result.error) return res.status(result.status).json({ error: result.error });
+
+    res.json({
+      orderId: result.dto.id,
+      orderNumber: result.dto.orderNumber,
+      total: result.dto.total,
+      paymentMethod: result.dto.payment.method,
+      confirmSubtext: CONFIRM_SUBTEXT[result.dto.payment.method],
+      scheduledFor: result.dto.scheduledFor,
+    });
   } catch (err) {
     next(err);
   }
@@ -392,5 +452,7 @@ module.exports = {
   updateItems,
   markPaid,
   getPublicStatus,
+  getTablePendingOrder,
+  updateItemsPublic,
   TRANSITIONS,
 };
