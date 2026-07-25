@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Category, MenuItemDTO, Supplement } from "@/lib/types";
 import { useCart } from "@/lib/cart-context";
 
-const SUPPLEMENT_CATEGORIES = new Set(["classic", "signature"]);
+const SUPPLEMENT_CATEGORIES = new Set(["base-tomate", "base-creme"]);
 
 export default function ItemDetailSheet({
   item,

@@ -1,0 +1,1282 @@
+{
+  "categories": [
+    {
+      "key": "base-tomate",
+      "label": "Base Tomate",
+      "order": 0
+    },
+    {
+      "key": "base-creme",
+      "label": "Base Crème",
+      "order": 1
+    },
+    {
+      "key": "pizza-mega",
+      "label": "Pizza Méga",
+      "order": 2
+    },
+    {
+      "key": "pizzwich",
+      "label": "pizzwich",
+      "order": 3
+    },
+    {
+      "key": "pates",
+      "label": "Pâtes",
+      "order": 4
+    },
+    {
+      "key": "boisson",
+      "label": "Boisson",
+      "order": 5
+    },
+    {
+      "key": "salades",
+      "label": "Salades",
+      "order": 6
+    },
+    {
+      "key": "dessert-16",
+      "label": "Dessert 16",
+      "order": 7
+    },
+    {
+      "key": "pizza-promo",
+      "label": "pizza promo",
+      "order": 8
+    },
+    {
+      "key": "dessert",
+      "label": "DESSERT",
+      "order": 9
+    }
+  ],
+  "items": [
+    {
+      "categoryKey": "base-tomate",
+      "name": "Margarita",
+      "desc": "sauce tomate, fromage, olives",
+      "photo": "/photos/base-tomate-margarita.jpg",
+      "highlight": true,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 490
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Végétarienne",
+      "desc": "sauce tomate, fromage, olives, oignons, poivrons, tomate fraiche, champignons",
+      "photo": "/photos/base-tomate-vegetarienne.jpg",
+      "highlight": true,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 590
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Italienne",
+      "desc": "sauce tomate, fromage, olives, viande hachée",
+      "photo": "/photos/base-tomate-italienne.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 590
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Tonata",
+      "desc": "sauce tomate, fromage, olives, thon",
+      "photo": "/photos/base-tomate-tonata.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 690
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Chicken",
+      "desc": "sauce tomate, fromage, olives, escalope",
+      "photo": "/photos/base-tomate-chicken.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 690
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Oranaise",
+      "desc": "sauce tomate, fromage, olives, oignons, oeuf, merguez, poivrons",
+      "photo": "/photos/base-tomate-oranaise.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Milano",
+      "desc": "sauce tomate, fromage, olives, poulet fumé, champignons",
+      "photo": "/photos/base-tomate-milano.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Mexicaine",
+      "desc": "sauce tomate, olives, poulet mexicain, poivrons",
+      "photo": "/photos/base-tomate-mexicaine.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Chorizo",
+      "desc": "sauce tomate, fromage, chorizo, poivrons",
+      "photo": "/photos/base-tomate-chorizo.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "4 Fromages",
+      "desc": "sauce tomate, gouda, edam, camembert, cheddar",
+      "photo": "/photos/base-tomate-4-fromages.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Napolitaine",
+      "desc": "sauce tomate, fromage, anchois, thon, câpres",
+      "photo": "/photos/base-tomate-napolitaine.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Buffalo",
+      "desc": "sauce tomate, fromage, escalope, viande hachée",
+      "photo": "/photos/base-tomate-buffalo.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Istanbul",
+      "desc": "sauce tomate, poulet kebab, merguez, oignons",
+      "photo": "/photos/base-tomate-istanbul.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "Burger",
+      "desc": "sauce tomate, poulet fumé, viande hachée, oignons, tomate fraiche, cornichons, slices, sauce BBQ",
+      "photo": "/photos/base-tomate-burger.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 990
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-tomate",
+      "name": "La Chef",
+      "desc": "sauce tomate, poulet escalope, chorizo, viande hachée",
+      "photo": "/photos/base-tomate-la-chef.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 1090
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Kebab",
+      "desc": "sauce blanche, fromage, oignons, poulet kebab, tomate fraiche",
+      "photo": "/photos/base-creme-kebab.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Indienne",
+      "desc": "sauce blanche, fromage, oignons, poulet mariné curry, poivrins",
+      "photo": "/photos/base-creme-indienne.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 790
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Parisienne",
+      "desc": "sauce blanche, oignons, poulet crème, champignons, pomme de terre",
+      "photo": "/photos/base-creme-parisienne.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Bursino",
+      "desc": "sauce blanche, fromage, oignons, poulet a la crème, fromage bursino",
+      "photo": "/photos/base-creme-bursino.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "4 Saison",
+      "desc": "sauce blanche, fromage, olives, povrons, poulet fumé, viande hachée, champignons",
+      "photo": "/photos/base-creme-4-saison.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 990
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Boisée",
+      "desc": "sauce blanche, escalope, poulet fumé, sauce fromagére",
+      "photo": "/photos/base-creme-boisee.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Firma",
+      "desc": "sauce blanche, fromage, oignons,poulet fumé, pomme de terre, camembert",
+      "photo": "/photos/base-creme-firma.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Spicy Thai",
+      "desc": "crème fraiche, sauce chili thai, escalope spicy",
+      "photo": "/photos/base-creme-spicy-thai.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 890
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Délicieuse",
+      "desc": "crème fraiche, viande hachée, camembert, champignons",
+      "photo": "/photos/base-creme-delicieuse.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 990
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "6 Fromages",
+      "desc": "sauce blanche, fromage blue, chèvre, edam, gouda, cheddar, mozza",
+      "photo": "/photos/base-creme-6-fromages.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 990
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Gruyère",
+      "desc": "sauce blanche, poulet, crème, tranche gruyère, oignons",
+      "photo": "/photos/base-creme-gruyere.jpg",
+      "highlight": true,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 990
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Chèvre",
+      "desc": "sauce blanche, chèvre, miel, figues, noix",
+      "photo": "/photos/base-creme-chevre.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 1090
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Saumon",
+      "desc": "sauce blanche, saumon, boursino, oignons, pomme de terre",
+      "photo": "/photos/base-creme-saumon.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 1090
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "base-creme",
+      "name": "Burrata",
+      "desc": "sauce blanche, roquette, burrata,sauce balsamique, sauce presto",
+      "photo": "/photos/base-creme-burrata.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 1290
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizza-mega",
+      "name": "Duo",
+      "desc": "deux choix",
+      "photo": "/photos/pizza-mega-duo.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "2 Choix",
+          "price": 2490
+        }
+      ],
+      "comboConfig": {
+        "picks": 2,
+        "eligibleCategoryKeys": [
+          "base-tomate",
+          "base-creme"
+        ]
+      }
+    },
+    {
+      "categoryKey": "pizza-mega",
+      "name": "Trio",
+      "desc": "trois choix",
+      "photo": "/photos/pizza-mega-trio.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "3 Choix",
+          "price": 2690
+        }
+      ],
+      "comboConfig": {
+        "picks": 3,
+        "eligibleCategoryKeys": [
+          "base-tomate",
+          "base-creme"
+        ]
+      }
+    },
+    {
+      "categoryKey": "pizza-mega",
+      "name": "Quatro",
+      "desc": "quatre choix",
+      "photo": "/photos/pizza-mega-quatro.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "4 Choix",
+          "price": 2890
+        }
+      ],
+      "comboConfig": {
+        "picks": 4,
+        "eligibleCategoryKeys": [
+          "base-tomate",
+          "base-creme"
+        ]
+      }
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Classic",
+      "desc": "escalope, sauce, légumes",
+      "photo": "/photos/pizzwich-le-classic.jpg",
+      "highlight": true,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 550
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Fumé",
+      "desc": "poulet fumé, sauce, légumes",
+      "photo": "/photos/pizzwich-le-fume.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 550
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Mexicain",
+      "desc": "poulet méxicain, légumes, sauce, olives",
+      "photo": "/photos/pizzwich-le-mexicain.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 650
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Beef",
+      "desc": "viande hachée, légumes, sauce",
+      "photo": "/photos/pizzwich-le-beef.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Chicken Beef",
+      "desc": "viande hachée, escalope, sauce, légumes",
+      "photo": "/photos/pizzwich-le-chicken-beef.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Chicken Mix",
+      "desc": "escalope, poulet fumé, légumes, sauce",
+      "photo": "/photos/pizzwich-le-chicken-mix.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Spéciale",
+      "desc": "poulet fumé, viande hachée, légumes, sauce",
+      "photo": "/photos/pizzwich-le-speciale.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizzwich",
+      "name": "Le Forestier",
+      "desc": "escalope, champignons, légumes, sauce",
+      "photo": "/photos/pizzwich-le-forestier.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pates",
+      "name": "Pâtes Poulet Curry",
+      "desc": "crème fraiche,poulet escalope curry, fromage",
+      "photo": "/photos/pates-pates-poulet-curry.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pates",
+      "name": "Pâtes Carbonara",
+      "desc": "crème fraiche, poulet fumé, fromage",
+      "photo": "/photos/pates-pates-carbonara.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 750
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pates",
+      "name": "Pâtes Mexicaine Poulet",
+      "desc": "sauce tomates, poulet escalope épicé, fromage",
+      "photo": "/photos/pates-pates-mexicaine-poulet.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 800
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pates",
+      "name": "Pâtes Bolonaise",
+      "desc": "viande hachée, sauce tomate, fromage",
+      "photo": "/photos/pates-pates-bolonaise.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 800
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pates",
+      "name": "Pâtes Poulet Champignons",
+      "desc": "crème fraiche, poulet escalope, champignons frais",
+      "photo": "/photos/pates-pates-poulet-champignons.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 850
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pates",
+      "name": "Pâtes Au Saumon",
+      "desc": "crème fraiche, saumon fumé, boursino",
+      "photo": "/photos/pates-pates-au-saumon.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 1100
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Canette",
+      "desc": "",
+      "photo": "/photos/boisson-canette.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 100
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Boisson 1L",
+      "desc": "",
+      "photo": "/photos/boisson-boisson-1l.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 150
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Canette gold",
+      "desc": "",
+      "photo": "/photos/boisson-canette-gold.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 120
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Schweps Gold 1L",
+      "desc": "",
+      "photo": "/photos/boisson-schweps-gold-1l.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 200
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "EAU 0.5 cl",
+      "desc": "",
+      "photo": "/photos/boisson-eau-0-5-cl.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 50
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "salades",
+      "name": "Salade Cesar",
+      "desc": "",
+      "photo": "/photos/salades-salade-cesar.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 490
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "salades",
+      "name": "Salade Nicoise",
+      "desc": "",
+      "photo": "/photos/salades-salade-nicoise.png",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 490
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "eau gazeuse",
+      "desc": "",
+      "photo": "/photos/boisson-eau-gazeuse.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 80
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Bissap",
+      "desc": "",
+      "photo": "/photos/boisson-bissap.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 250
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Limocento",
+      "desc": "",
+      "photo": "/photos/boisson-limocento.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 300
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "dessert",
+      "name": "BonBon",
+      "desc": "",
+      "photo": "/photos/dessert-bonbon.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 200
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "dessert",
+      "name": "Café",
+      "desc": "",
+      "photo": "/photos/dessert-cafe.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 100
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "dessert-16",
+      "name": "bonbon",
+      "desc": "",
+      "photo": "/photos/dessert-16-bonbon.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 200
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizza-promo",
+      "name": "MARGARITA",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 300
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizza-promo",
+      "name": "ITALIENNE",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 300
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizza-promo",
+      "name": "TONATA",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 300
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "pizza-promo",
+      "name": "CHICKEN",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "pizza",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 300
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "Smoothies",
+      "desc": "",
+      "photo": "/photos/boisson-smoothies.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 350
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "dessert-16",
+      "name": "Teramisu",
+      "desc": "",
+      "photo": "/photos/dessert-16-teramisu.jpg",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 350
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "dessert-16",
+      "name": "Mousse au chocolat",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 350
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "salades",
+      "name": "salade nicoise PM",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 350
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "salades",
+      "name": "SALADE CESAR PM",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 350
+        }
+      ],
+      "comboConfig": null
+    },
+    {
+      "categoryKey": "boisson",
+      "name": "EAU 1LITRE",
+      "desc": "",
+      "photo": "",
+      "highlight": false,
+      "available": true,
+      "station": "grill",
+      "sizes": [
+        {
+          "label": "Prix",
+          "price": 100
+        }
+      ],
+      "comboConfig": null
+    }
+  ],
+  "supplements": [
+    {
+      "key": "edam",
+      "label": "Edam",
+      "price": 200
+    },
+    {
+      "key": "gruyere",
+      "label": "Gruyere",
+      "price": 250
+    },
+    {
+      "key": "mozza",
+      "label": "Mozza",
+      "price": 200
+    },
+    {
+      "key": "bourata",
+      "label": "Bourata",
+      "price": 800
+    },
+    {
+      "key": "camembert",
+      "label": "Camembert",
+      "price": 200
+    },
+    {
+      "key": "fromage-bleu",
+      "label": "Fromage Bleu",
+      "price": 300
+    },
+    {
+      "key": "chevre",
+      "label": "Chevre",
+      "price": 253
+    },
+    {
+      "key": "vh",
+      "label": "VH",
+      "price": 200
+    },
+    {
+      "key": "poulet",
+      "label": "Poulet",
+      "price": 200
+    },
+    {
+      "key": "mergeuz",
+      "label": "Mergeuz",
+      "price": 200
+    },
+    {
+      "key": "thon",
+      "label": "Thon",
+      "price": 200
+    },
+    {
+      "key": "anchois",
+      "label": "Anchois",
+      "price": 200
+    },
+    {
+      "key": "saumon",
+      "label": "Saumon",
+      "price": 350
+    },
+    {
+      "key": "oeuf",
+      "label": "Oeuf",
+      "price": 50
+    },
+    {
+      "key": "legume",
+      "label": "Légume",
+      "price": 50
+    },
+    {
+      "key": "olives",
+      "label": "Olives",
+      "price": 50
+    },
+    {
+      "key": "champignon",
+      "label": "Champignon",
+      "price": 100
+    },
+    {
+      "key": "capres",
+      "label": "Capres",
+      "price": 50
+    },
+    {
+      "key": "creme-fraiche",
+      "label": "Créme Fraiche",
+      "price": 100
+    }
+  ],
+  "pizzaKeys": [
+    "base-tomate",
+    "base-creme",
+    "pizza-mega",
+    "pizzwich",
+    "pizza-promo"
+  ]
+}
