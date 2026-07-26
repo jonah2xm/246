@@ -5,7 +5,7 @@ const SIZE_CLASS = {
   wide: "max-w-[760px]",
   xwide: "max-w-[980px]",
 };
-
+//testing the push problems in github
 export default function Modal({
   title,
   onClose,
