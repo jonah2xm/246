@@ -5,13 +5,12 @@ import { getMenu, placeOrder, lookupTable, getPendingTableOrder, updateOrderItem
 import { getSocket } from "@/lib/socket";
 import { CartProvider, useCart } from "@/lib/cart-context";
 import { MenuItemDTO, MenuResponse, OrderMode, PaymentMethod } from "@/lib/types";
-import ScanScreen from "@/components/ScanScreen";
 import MenuScreen from "@/components/MenuScreen";
 import ItemDetailSheet from "@/components/ItemDetailSheet";
 import CartScreen from "@/components/CartScreen";
 import ConfirmScreen from "@/components/ConfirmScreen";
 
-type Screen = "scan" | "menu" | "cart" | "confirm";
+type Screen = "menu" | "cart" | "confirm";
 
 const ORDER_MODE: OrderMode =
   process.env.NEXT_PUBLIC_ORDER_MODE === "delivery" ? "delivery" : "table";
@@ -37,7 +36,7 @@ interface ExistingOrder {
 }
 
 function OrderApp() {
-  const [screen, setScreen] = useState<Screen>("scan");
+  const [screen, setScreen] = useState<Screen>("menu");
   const [menu, setMenu] = useState<MenuResponse | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("");
@@ -174,10 +173,6 @@ function OrderApp() {
         </button>
       </div>
     );
-  }
-
-  if (screen === "scan") {
-    return <ScanScreen onEnter={() => setScreen("menu")} />;
   }
 
   if (loadError && !menu) {

@@ -34,20 +34,6 @@
   --font-sans: var(--font-inter);
 }
 
-@keyframes qrPulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 oklch(0.8 0.24 142 / 0.35);
-  }
-  50% {
-    box-shadow: 0 0 44px 10px oklch(0.8 0.24 142 / 0.3);
-  }
-}
-
-.animate-qr-pulse {
-  animation: qrPulse 2.4s ease-in-out infinite;
-}
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
